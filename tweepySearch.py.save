@@ -24,7 +24,7 @@ access_token_secret = ["AkKsz3McpIXSmsrEPVKc27jmMsfUSRIlwIaN2pW7AjnrN",
 
 couch = couchdb.Server()
 couch = couchdb.Server('http://admin:admin@172.17.0.2:5984/')
-db = couch['twitter']
+db = couch['tweets']
 
 
 
@@ -44,7 +44,8 @@ def searchTweets(consumer_key, consumer_secret, access_token, access_token_secre
       try:
         db[str(tweet_id)] = tweet_data
       except:
-        print 'DB error'
+        print('DB error')
+      print(tweet_data)
 
 if __name__ == '__main__':
   i = 0
@@ -54,7 +55,7 @@ if __name__ == '__main__':
       searchTweets(consumer_key[i], consumer_secret[i], access_token[i], access_token_secret[i])
     except:
       i += 1
-      print 'sleep for ' + str(15/len(consumer_key)+1) + " mins"
+      print('sleep for' + str(15/len(consumer_key)+1))
       time.sleep((15/len(consumer_key)+1)*60)
-      print 'keep seaching'
+      print('keep seaching')
 

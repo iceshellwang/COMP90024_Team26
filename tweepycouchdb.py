@@ -1,4 +1,5 @@
 import couchdb
+import time
 import csv
 import json
 from tweepy import Stream
@@ -49,6 +50,8 @@ while True:
     twitterStream.filter(track=["*"], locations=[143.9,-38.5,146.1,-37.1])
   except:
     twitterStream.disconnect()
+    print "Disconnect, Sleeping"
+    time.sleep(60*60)
     continue
 
 # auth = tweepy.auth.OAuthHandler(consumer_key, consumer_secret)
