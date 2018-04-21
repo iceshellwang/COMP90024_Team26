@@ -32,13 +32,9 @@ def searchTweets(consumer_key, consumer_secret, access_token, access_token_secre
   auth = tweepy.auth.OAuthHandler(consumer_key, consumer_secret)
   auth.set_access_token(access_token, access_token_secret)
   api = tweepy.API(auth)
-  if t_id == 0:
-    for tweet in tweepy.Cursor(api.search,q="*",lang = "en",until="2018-04-19",geocode="-37.810142,144.964302,150km").items():
-      processTweet(tweet)
-  else:
-    for tweet in tweepy.Cursor(api.search,q="*",lang = "en",max_id=str(tweet_id),geocode="-37.810142,144.964302,150km").items():
-      processTweet(tweet)
 
+  for tweet in tweepy.Cursor(api.search,q="*",lang = "en",geocode="-37.810142,144.964302,150km").items():
+    processTweet(tweet)
 
 def processTweet(tweet):
   tweet_data = {}
@@ -48,17 +44,16 @@ def processTweet(tweet):
   if tweet.geo != None:
     tweet_data['lat'] = tweet.geo['coordinates'][0]
     tweet_data['long'] = tweet.geo['coordinates'][1]
-    try:
-      db[str(tweet_id)] = tweet_data
-    except:
-      print 'DB error'
+    try:       db[str(tweet_id)] = tweet_data
+      except:
+        print 'DB error'
 
 if __name__ == '__main__':
   i = 0
   while True:
     for i in range(len(consumer_key)):
       try:
-        searchTweets(consumer_key[i], consumer_secret[i], access_token[i], access_token_secret[i], tweet_id)
+        searchTweets(consumer_key[i], consumer_secret[i], access_token[i], access_token_secret[i])
       except:
         pass
     print 'sleep for 15 mins'
