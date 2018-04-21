@@ -23,7 +23,7 @@ access_token_secret = ["AkKsz3McpIXSmsrEPVKc27jmMsfUSRIlwIaN2pW7AjnrN",
 
 
 couch = couchdb.Server()
-couch = couchdb.Server('http://admin:admin@localhost:5984/')
+couch = couchdb.Server('http://admin:admin@172.17.0.2:5984/')
 db = couch['tweets']
 
 
