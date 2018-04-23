@@ -3,6 +3,7 @@ import json
 import tweepy
 import time
 import timeit
+from datetime import timedelta
 
 
 file = open("DBErrorTweets.txt", "w")
@@ -27,7 +28,7 @@ def searchTweets(consumer_key, consumer_secret, access_token, access_token_secre
   min_t_id = 999999999999999999999999
   if t_id == 0:
     try:
-      for tweet in tweepy.Cursor(api.search,q="*",lang = "en",until="2018-04-20",geocode="-37.810142,144.964302,150km").items():
+      for tweet in tweepy.Cursor(api.search,q="*",lang = "en",until="2018-04-21",geocode="-37.810142,144.964302,150km").items():
         temp_t_id = processTweet(tweet)
         if temp_t_id < min_t_id:
           min_t_id = temp_t_id
@@ -49,7 +50,8 @@ def processTweet(tweet):
   tweet_id = tweet.id
   tweet_data['text'] = tweet.text
   tweet_data['user'] = tweet.user.name
-  tweet_data['created_at'] = tweet.created_at
+  tweet_data['created_at'] = str(tweet.created_at - timedelta(hours=7))
+  print(json.dumps(tweet_data))
   if tweet.geo != None:
     tweet_data['lat'] = tweet.geo['coordinates'][0]
     tweet_data['long'] = tweet.geo['coordinates'][1]
@@ -79,8 +81,8 @@ if __name__ == '__main__':
 #  for tweet in db.find(mango):
 #    print(tweet['_id'])
 
-  tweet_id = int(list(db.find(mango))[0]['_id'])
-  # tweet_id = 0
+  # tweet_id = int(list(db.find(mango))[0]['_id'])
+  tweet_id = 0
   print(tweet_id)
   while True:
     start = timeit.default_timer()
@@ -108,7 +110,6 @@ if __name__ == '__main__':
         print(tweet_id)
     stop = timeit.default_timer()
     print('Run out all access tokens, speed: ' + str(stop - start) + "s.")
-    if 15*60-(int(stop - start)) > 0:
-      time.sleep(16*60-(int(stop - start)))
+    time.sleep(max(0, 16*60-(int(stop - start))))
     print('Keep seaching')
 
