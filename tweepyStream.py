@@ -1,4 +1,4 @@
-# import couchdb
+import couchdb
 import timeit
 import time
 import csv
