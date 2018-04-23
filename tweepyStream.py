@@ -1,4 +1,5 @@
-import couchdb
+# import couchdb
+import timeit
 import time
 import csv
 import json
@@ -12,10 +13,14 @@ consumer_secret = "nbty0xkOPR6vzkrchHPI9PxStppGj0i92RVdGCgolihMxhF9zp"
 access_token = "1206790807-Qk3tsBTAnlFv0ntcQMAWS6jy4j0cNFitUBDHFwt"
 access_token_secret = "AkKsz3McpIXSmsrEPVKc27jmMsfUSRIlwIaN2pW7AjnrN"
 
-couch = couchdb.Server()
-couch = couchdb.Server('http://admin:admin@172.17.0.2:5984/')
-db = couch['twitter']
+# couch = couchdb.Server()
+# couch = couchdb.Server('http://admin:admin@172.17.0.2:5984/')
+# db = couch['twitter']
+# couch2 = couchdb.Server()
+# couch2 = couchdb.Server('http://admin:admin@localhost:5984/')
+# original_db = couch2['other_twitter']
 
+tokens_file = open("tokens.json", "r")
 
 
 class listener(StreamListener):
@@ -37,6 +42,13 @@ class listener(StreamListener):
           except Exception as e:
             tweet['id'] = tweet_id
             print(tweet)
+        else:
+          try:
+            original_db[str(tweet_id)] = tweet
+          except Exception as e:
+            print(e)
+            tweet['id'] = tweet_id
+            print(tweet)
       return True
     except:
       return True
@@ -45,18 +57,25 @@ class listener(StreamListener):
       print(status)
 
 
+if __name__ == '__main__':
 
-auth = OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(access_token, access_token_secret)
-while True:
-  twitterStream = Stream(auth, listener())
-  try:
-    twitterStream.filter(track=["*"], locations=[143.9,-38.5,146.1,-37.1])
-  except:
-    twitterStream.disconnect()
-    print("Disconnect, Sleeping")
-    time.sleep(60*60)
-    continue
+  while True:
+    start = timeit.default_timer()
+    tokens_file_str = tokens_file.read()
+    tokens_json = json.loads(tokens_file_str)
+    tokens = tokens_json['tokens']
+    tokens_file.close()
+    for i in range(len(tokens)):
+      auth = OAuthHandler(tokens[i]['ConsumerKey'], tokens[i]['ConsumerSecret'],)
+      auth.set_access_token(tokens[i]['AccessToken'], tokens[i]['AccessTokenSecret'])
+      twitterStream = Stream(auth, listener())
+      try:
+        twitterStream.filter(locations=[143.9,-38.5,146.1,-37.1])
+      except:
+        twitterStream.disconnect()
+    stop = timeit.default_timer()
+    if 60*60-(int(stop - start)) > 0:
+      time.sleep(60*60-(int(stop - start)))
 
 # auth = tweepy.auth.OAuthHandler(consumer_key, consumer_secret)
 # auth.set_access_token(access_token, access_token_secret)

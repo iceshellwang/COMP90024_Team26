@@ -2,6 +2,7 @@ import couchdb
 import json
 import tweepy
 import time
+import timeit
 
 
 consumer_key = ["fx8DdDJ72wJfygl89KMFuJglK",
@@ -20,13 +21,19 @@ access_token_secret = ["AkKsz3McpIXSmsrEPVKc27jmMsfUSRIlwIaN2pW7AjnrN",
                         "daNdhzK4a7GQaSV8fQf9dyCLLB8wT66hFYApJ8UvhkQQc",
                         "HGGQrK216AHo8lAQx27bxC3zpxyPk9AxLq4CCtqXdoFDK",
                         "DO1cDgikLxmGPGqvGl7DbO8wLZtVJVqQfu4q7IcGsHCwk"]
+file = open("DBErrorTweets.txt", "w")
+tokens_file = open("tokens.json", "r")
 
+couchdb_address = 'http://admin:admin@172.17.0.2:5984/'
+couchdb_dbname = 'twitter'
 
 couch = couchdb.Server()
-couch = couchdb.Server('http://admin:admin@172.17.0.2:5984/')
-db = couch['twitter']
+couch = couchdb.Server(couchdb_address)
+db = couch[couchdb_dbname]
 
-file = open("DBErrorTweets.txt", "w")
+couch2 = couchdb.Server()
+couch2 = couchdb.Server('http://admin:admin@localhost:5984/')
+original_db = couch2['other_twitter']
 
 
 def searchTweets(consumer_key, consumer_secret, access_token, access_token_secret, t_id):
@@ -61,8 +68,9 @@ def processTweet(tweet):
   if tweet.geo != None:
     tweet_data['lat'] = tweet.geo['coordinates'][0]
     tweet_data['long'] = tweet.geo['coordinates'][1]
+    # print(tweet_id, tweet_data['text'].encode('utf-8'))
     try:
-      print(tweet_id, tweet_data['text'].encode('utf-8'))
+      # print(tweet_id, tweet_data['text'].encode('utf-8'))
       db[str(tweet_id)] = tweet_data
     except Exception as e:
       print(e)
@@ -70,22 +78,39 @@ def processTweet(tweet):
       file.write(json.dumps(tweet_data))
       file.write("\n")
       file.flush()
-      print('DB error')
+  else:
+    try:
+      # print(tweet_id, tweet_data['text'].encode('utf-8'))
+      original_db[str(tweet_id)] = tweet_data
+    except Exception as e:
+      print(tweet_id, tweet_data['text'].encode('utf-8'))
+      print(e)
   return tweet_id
 
 if __name__ == '__main__':
   mango = {'selector':{'_id':{"$gt":None}}, 'fields':['_id'],"sort":[{"_id":"asc"}]}
-  #tweet_id = int(db.find(mango)[0]['_id'])
-  tweet_id = 0
+  tweet_id = int(db.find(mango)[0]['_id'])
+  # tweet_id = 0
   print(tweet_id)
   while True:
-    for i in range(len(consumer_key)):
+    start = timeit.default_timer()
+    tokens_file_str = tokens_file.read()
+    tokens_json = json.loads(tokens_file_str)
+    tokens = tokens_json['tokens']
+    tokens_file.close()
+    for i in range(len(tokens)):
       try:
-        tweet_id = searchTweets(consumer_key[i], consumer_secret[i], access_token[i], access_token_secret[i], tweet_id)
+        tweet_id = searchTweets(tokens[i]['ConsumerKey'],
+                                tokens[i]['ConsumerSecret'],
+                                tokens[i]['AccessToken'],
+                                tokens[i]['AccessTokenSecret'],
+                                tweet_id)
         print(tweet_id)
       except:
         print(tweet_id)
-    print('sleep for 15 mins')
-    time.sleep(15*60)
-    print('keep seaching')
+    stop = timeit.default_timer()
+    print('Run out all access tokens, speed: ' + str(stop - start) + "s.")
+    if 15*60-(int(stop - start)) > 0:
+      time.sleep(16*60-(int(stop - start)))
+    print('Keep seaching')
 
