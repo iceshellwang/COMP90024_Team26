@@ -90,37 +90,33 @@ def processTweet(tweet):
 
 if __name__ == '__main__':
   mango = {'selector':{'_id':{"$gt":None}}, 'fields':['_id'],"sort":[{"_id":"asc"}]}
-
-#  for tweet in db.find(mango):
-#    print(tweet['_id'])
-
   tweet_id = int(list(db.find(mango))[0]['_id'])
   # tweet_id = 0
   print(tweet_id)
-  while True:
-    start = timeit.default_timer()
+#  while True:
+#    start = timeit.default_timer()
 
-    while True:
-      try:
-        tokens_file = open("tokens.json", "r")
-        tokens_file_str = tokens_file.read()
-        tokens_json = json.loads(tokens_file_str)
-        tokens = tokens_json['tokens']
-        tokens_file.close()
-        break
-      except:
-        continue
+#    while True:
+#      try:
+#        tokens_file = open("tokens.json", "r")
+#        tokens_file_str = tokens_file.read()
+#        tokens_json = json.loads(tokens_file_str)
+#        tokens = tokens_json['tokens']
+#        tokens_file.close()
+#        break
+#      except:
+#        continue
 
-    for i in range(len(tokens)):
-      try:
-        tweet_id = searchTweets(tokens[i]['ConsumerKey'],
-                                tokens[i]['ConsumerSecret'],
-                                tokens[i]['AccessToken'],
-                                tokens[i]['AccessTokenSecret'],
-                                tweet_id)
-        print(tweet_id)
-      except:
-        print(tweet_id)
+# #   for i in range(len(tokens)):
+#      try:
+#        tweet_id = searchTweets(tokens[i]['ConsumerKey'],
+#                                tokens[i]['ConsumerSecret'],
+#                                tokens[i]['AccessToken'],
+#                                tokens[i]['AccessTokenSecret'],
+#                                tweet_id)
+#        print(tweet_id)
+#      except:
+ #       print(tweet_id)
     stop = timeit.default_timer()
     print('Run out all access tokens, speed: ' + str(stop - start) + "s.")
     if 15*60-(int(stop - start)) > 0:

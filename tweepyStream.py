@@ -37,6 +37,7 @@ class listener(StreamListener):
         if geo != None:
           tweet['lat'] = all_data["geo"]['coordinates'][0]
           tweet['long'] = all_data["geo"]['coordinates'][1]
+          print(tweet)
           try:
             db[str(tweet_id)] = tweet
           except Exception as e:
