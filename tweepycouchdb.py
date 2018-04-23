@@ -32,7 +32,11 @@ class listener(StreamListener):
         if geo != None:
           tweet['lat'] = all_data["geo"]['coordinates'][0]
           tweet['long'] = all_data["geo"]['coordinates'][1]
-          db[str(tweet_id)] = tweet
+          try:
+            db[str(tweet_id)] = tweet
+          except Exception as e:
+            tweet['id'] = tweet_id
+            print(tweet)
       return True
     except:
       return True
@@ -50,7 +54,7 @@ while True:
     twitterStream.filter(track=["*"], locations=[143.9,-38.5,146.1,-37.1])
   except:
     twitterStream.disconnect()
-    print "Disconnect, Sleeping"
+    print("Disconnect, Sleeping")
     time.sleep(60*60)
     continue
 
