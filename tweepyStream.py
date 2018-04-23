@@ -1,4 +1,4 @@
-import couchdb
+# import couchdb
 import timeit
 import time
 import csv
@@ -33,6 +33,8 @@ class listener(StreamListener):
         tweet_id = all_data["id"]
         tweet['text'] = all_data["text"]
         tweet['user'] = all_data["user"]["name"]
+        tweet['created_at'] = all_data["created_at"]
+        print(tweet)
         geo = all_data["geo"]
         if geo != None:
           tweet['lat'] = all_data["geo"]['coordinates'][0]

@@ -5,22 +5,6 @@ import time
 import timeit
 
 
-consumer_key = ["fx8DdDJ72wJfygl89KMFuJglK",
-                "EqbRMtxKufAL7k8IUmwMkyXF3",
-                "BwX4hR8X7xLDW5HsNVEvhdpII",
-                "KS7OVti6JQmjmjjdOFcHuOTf0"]
-consumer_secret = ["nbty0xkOPR6vzkrchHPI9PxStppGj0i92RVdGCgolihMxhF9zp",
-                    "pbn19hHX25c9RdlVopx5IEd55ZMgJGoMexPzkKx13rHRXZDx0Y",
-                    "vAG93V2x5ap8xW03J2sdJUres2DWNvlpVtOAwpLC6wzpx1XTwq",
-                    "ax4xAXNHwKZRgsAZMNPMGk7voainFnEUpZlXtLt5krm918BulW"]
-access_token = ["1206790807-Qk3tsBTAnlFv0ntcQMAWS6jy4j0cNFitUBDHFwt",
-                "1206790807-Lnx4FsK2cRRfp5iZ6m3Dkkpf0bwzfjEBa5S7IGG",
-                "1206790807-pT1mmfxu8z3pgFBbqKdyQd83QHjVAZYQJILDQdo",
-                "1206790807-2Ohfa2e8CjtvQIldipOXo8IHivPtUdIgdYoF0cF"]
-access_token_secret = ["AkKsz3McpIXSmsrEPVKc27jmMsfUSRIlwIaN2pW7AjnrN",
-                        "daNdhzK4a7GQaSV8fQf9dyCLLB8wT66hFYApJ8UvhkQQc",
-                        "HGGQrK216AHo8lAQx27bxC3zpxyPk9AxLq4CCtqXdoFDK",
-                        "DO1cDgikLxmGPGqvGl7DbO8wLZtVJVqQfu4q7IcGsHCwk"]
 file = open("DBErrorTweets.txt", "w")
 
 
@@ -65,6 +49,7 @@ def processTweet(tweet):
   tweet_id = tweet.id
   tweet_data['text'] = tweet.text
   tweet_data['user'] = tweet.user.name
+  tweet_data['created_at'] = tweet.created_at
   if tweet.geo != None:
     tweet_data['lat'] = tweet.geo['coordinates'][0]
     tweet_data['long'] = tweet.geo['coordinates'][1]
