@@ -1,1 +1,0 @@
-{"text": "I'm at Caffe E Torta in Melbourne, VIC https://t.co/Zb3SJOe2v7", "user": "iBegin", "lat": -37.81497371, "long": 144.96421928, "id": 985393369252843520}
