@@ -51,7 +51,7 @@ def processTweet(tweet):
   tweet_data['text'] = tweet.text
   tweet_data['user'] = tweet.user.name
   tweet_data['created_at'] = str(tweet.created_at - timedelta(hours=7))
-  # print(tweet_data)
+  print(json.dumps(tweet_data))
   if tweet.geo != None:
     tweet_data['lat'] = tweet.geo['coordinates'][0]
     tweet_data['long'] = tweet.geo['coordinates'][1]
