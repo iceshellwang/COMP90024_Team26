@@ -22,7 +22,7 @@ access_token_secret = ["AkKsz3McpIXSmsrEPVKc27jmMsfUSRIlwIaN2pW7AjnrN",
                         "HGGQrK216AHo8lAQx27bxC3zpxyPk9AxLq4CCtqXdoFDK",
                         "DO1cDgikLxmGPGqvGl7DbO8wLZtVJVqQfu4q7IcGsHCwk"]
 file = open("DBErrorTweets.txt", "w")
-tokens_file = open("tokens.json", "r")
+
 
 couchdb_address = 'http://admin:admin@172.17.0.2:5984/'
 couchdb_dbname = 'twitter'
@@ -94,10 +94,18 @@ if __name__ == '__main__':
   print(tweet_id)
   while True:
     start = timeit.default_timer()
-    tokens_file_str = tokens_file.read()
-    tokens_json = json.loads(tokens_file_str)
-    tokens = tokens_json['tokens']
-    tokens_file.close()
+
+    while True:
+      try:
+        tokens_file = open("tokens.json", "r")
+        tokens_file_str = tokens_file.read()
+        tokens_json = json.loads(tokens_file_str)
+        tokens = tokens_json['tokens']
+        tokens_file.close()
+        break
+      except:
+        continue
+
     for i in range(len(tokens)):
       try:
         tweet_id = searchTweets(tokens[i]['ConsumerKey'],

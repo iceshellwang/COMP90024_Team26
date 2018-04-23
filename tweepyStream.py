@@ -1,4 +1,4 @@
-# import couchdb
+import couchdb
 import timeit
 import time
 import csv
@@ -13,14 +13,14 @@ consumer_secret = "nbty0xkOPR6vzkrchHPI9PxStppGj0i92RVdGCgolihMxhF9zp"
 access_token = "1206790807-Qk3tsBTAnlFv0ntcQMAWS6jy4j0cNFitUBDHFwt"
 access_token_secret = "AkKsz3McpIXSmsrEPVKc27jmMsfUSRIlwIaN2pW7AjnrN"
 
-# couch = couchdb.Server()
-# couch = couchdb.Server('http://admin:admin@172.17.0.2:5984/')
-# db = couch['twitter']
-# couch2 = couchdb.Server()
-# couch2 = couchdb.Server('http://admin:admin@localhost:5984/')
-# original_db = couch2['other_twitter']
+couch = couchdb.Server()
+couch = couchdb.Server('http://admin:admin@172.17.0.2:5984/')
+db = couch['twitter']
+couch2 = couchdb.Server()
+couch2 = couchdb.Server('http://admin:admin@localhost:5984/')
+original_db = couch2['other_twitter']
 
-tokens_file = open("tokens.json", "r")
+
 
 
 class listener(StreamListener):
@@ -61,10 +61,18 @@ if __name__ == '__main__':
 
   while True:
     start = timeit.default_timer()
-    tokens_file_str = tokens_file.read()
-    tokens_json = json.loads(tokens_file_str)
-    tokens = tokens_json['tokens']
-    tokens_file.close()
+
+    while True:
+      try:
+        tokens_file = open("tokens.json", "r")
+        tokens_file_str = tokens_file.read()
+        tokens_json = json.loads(tokens_file_str)
+        tokens = tokens_json['tokens']
+        tokens_file.close()
+        break
+      except:
+        continue
+
     for i in range(len(tokens)):
       auth = OAuthHandler(tokens[i]['ConsumerKey'], tokens[i]['ConsumerSecret'],)
       auth.set_access_token(tokens[i]['AccessToken'], tokens[i]['AccessTokenSecret'])
