@@ -6,6 +6,9 @@ import json
 from tweepy import Stream
 from tweepy import OAuthHandler
 from tweepy.streaming import StreamListener
+import timeit
+from datetime import timedelta
+from datetime import datetime
 
 
 consumer_key = "fx8DdDJ72wJfygl89KMFuJglK"
@@ -33,8 +36,12 @@ class listener(StreamListener):
         tweet_id = all_data["id"]
         tweet['text'] = all_data["text"]
         tweet['user'] = all_data["user"]["name"]
-        tweet['created_at'] = all_data["created_at"]
-        print(tweet)
+        # tweet['created_at'] = all_data["created_at"]
+        try:
+          tweet['created_at'] = str(datetime.strptime(all_data["created_at"],'%a %b %d %H:%M:%S +0000 %Y') + timedelta(hours=10))
+          # print(json.dumps(tweet))
+        except Exception as e:
+          print(e)
         geo = all_data["geo"]
         if geo != None:
           tweet['lat'] = all_data["geo"]['coordinates'][0]
@@ -82,11 +89,11 @@ if __name__ == '__main__':
       twitterStream = Stream(auth, listener())
       try:
         twitterStream.filter(locations=[143.9,-38.5,146.1,-37.1])
-      except:
+      except Exception as e:
+        print(e)
         twitterStream.disconnect()
     stop = timeit.default_timer()
-    if 60*60-(int(stop - start)) > 0:
-      time.sleep(60*60-(int(stop - start)))
+    time.sleep(max(0, 60*60-(int(stop - start))))
 
 # auth = tweepy.auth.OAuthHandler(consumer_key, consumer_secret)
 # auth.set_access_token(access_token, access_token_secret)
