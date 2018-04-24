@@ -3,6 +3,7 @@ import json
 import tweepy
 import time
 import timeit
+import datetime
 from datetime import timedelta
 
 
@@ -28,11 +29,14 @@ def searchTweets(consumer_key, consumer_secret, access_token, access_token_secre
   min_t_id = 999999999999999999999999
   if t_id == 0:
     try:
-      for tweet in tweepy.Cursor(api.search,q="*",lang = "en",until="2018-04-21",geocode="-37.810142,144.964302,150km").items():
+      now = datetime.datetime.now()
+      date_str = str(now.year) + "-" + str(now.month) + "-" + str(now.day)
+      for tweet in tweepy.Cursor(api.search,q="*",lang = "en",until=date_str,geocode="-37.810142,144.964302,150km").items():
         temp_t_id = processTweet(tweet)
         if temp_t_id < min_t_id:
           min_t_id = temp_t_id
-    except:
+    except Exception as e:
+      print(e)
       return min_t_id
   else:
     try:
@@ -40,7 +44,8 @@ def searchTweets(consumer_key, consumer_secret, access_token, access_token_secre
         temp_t_id = processTweet(tweet)
         if temp_t_id < min_t_id:
           min_t_id = temp_t_id
-    except:
+    except Exception as e:
+      print(e)
       return min_t_id
   print("Error")
   return min_t_id
@@ -51,28 +56,33 @@ def processTweet(tweet):
   tweet_data['text'] = tweet.text
   tweet_data['user'] = tweet.user.name
   tweet_data['created_at'] = str(tweet.created_at - timedelta(hours=7))
-  print(json.dumps(tweet_data))
   if tweet.geo != None:
     tweet_data['lat'] = tweet.geo['coordinates'][0]
     tweet_data['long'] = tweet.geo['coordinates'][1]
-    print(tweet_id, tweet_data['text'].encode('utf-8'))
+    # print(tweet_id, tweet_data['text'].encode('utf-8'))
     try:
       # print(tweet_id, tweet_data['text'].encode('utf-8'))
       db[str(tweet_id)] = tweet_data
     except Exception as e:
-      print(e)
-      tweet_data['id'] = tweet_id
-      file.write(json.dumps(tweet_data))
-      file.write("\n")
-      file.flush()
+      try:
+        print("Update doc with geo-info",tweet_id, tweet_data['text'].encode('utf-8'))
+        doc = db[str(tweet_id)]
+        doc['created_at'] = tweet_data['created_at']
+        db[str(tweet_id)] = doc
+      except Exception as e1:
+        print(e1)
   else:
     try:
       # print(tweet_id, tweet_data['text'].encode('utf-8'))
       original_db[str(tweet_id)] = tweet_data
     except Exception as e:
-      print("Other twitter error")
-      print(tweet_id, tweet_data['text'].encode('utf-8'))
-      print(e)
+      try:
+        # print("Update doc without geo-info",tweet_id, tweet_data['text'].encode('utf-8'))
+        doc = original_db[str(tweet_id)]
+        doc['created_at'] = tweet_data['created_at']
+        original_db[str(tweet_id)] = doc
+      except Exception as e1:
+        print(e1)
   return tweet_id
 
 if __name__ == '__main__':
@@ -81,8 +91,8 @@ if __name__ == '__main__':
 #  for tweet in db.find(mango):
 #    print(tweet['_id'])
 
-  # tweet_id = int(list(db.find(mango))[0]['_id'])
-  tweet_id = 0
+  tweet_id = int(list(db.find(mango))[0]['_id'])
+  # tweet_id = 0
   print(tweet_id)
   while True:
     start = timeit.default_timer()
@@ -105,6 +115,8 @@ if __name__ == '__main__':
                                 tokens[i]['AccessToken'],
                                 tokens[i]['AccessTokenSecret'],
                                 tweet_id)
+        if tweet_id == 999999999999999999999999:
+          tweet_id = 0
         print(tweet_id)
       except:
         print(tweet_id)
