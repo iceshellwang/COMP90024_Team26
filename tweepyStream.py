@@ -32,20 +32,29 @@ class listener(StreamListener):
     try:
       all_data = json.loads(data)
       if all_data['lang'] == 'en':
+        print("Getting Data", all_data)
         tweet = {}
         tweet_id = all_data["id"]
         tweet['text'] = all_data["text"]
         tweet['user'] = all_data["user"]["name"]
-        # tweet['created_at'] = all_data["created_at"]
+        if all_data['place'] != None:
+          tweet['place'] = {}
+          tweet['place']['name'] = str(all_data['place']['full_name'])
+          tweet['place']['coordinates'] = str(all_data['place']['bounding_box']['coordinates'])
         try:
           tweet['created_at'] = str(datetime.strptime(all_data["created_at"],'%a %b %d %H:%M:%S +0000 %Y') + timedelta(hours=10))
-          # print(json.dumps(tweet))
+          print(json.dumps(tweet))
         except Exception as e:
           print(e)
-        geo = all_data["geo"]
-        if geo != None:
-          tweet['lat'] = all_data["geo"]['coordinates'][0]
-          tweet['long'] = all_data["geo"]['coordinates'][1]
+        if all_data["geo"] != None or all_data['coordinates'] != None:
+          if all_data["geo"] != None:
+            tweet['geo'] = {}
+            tweet['geo']['lat'] = all_data["geo"]['coordinates'][0]
+            tweet['geo']['long'] = all_data["geo"]['coordinates'][1]
+          if all_data['coordinates'] != None:
+            tweet['coordinates'] = {}
+            tweet['coordinates']['lat'] = all_data["coordinates"]['coordinates'][1]
+            tweet['coordinates']['long'] = all_data["coordinates"]['coordinates'][0]
           print(tweet)
           try:
             db[str(tweet_id)] = tweet
