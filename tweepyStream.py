@@ -36,7 +36,9 @@ class listener(StreamListener):
         tweet = {}
         tweet_id = all_data["id"]
         tweet['text'] = all_data["text"]
-        tweet['user'] = all_data["user"]["name"]
+        tweet['user'] = {}
+        tweet['user']['name'] = all_data["user"]["name"]
+        tweet['user']['location'] = all_data["user"]["location"]
         if all_data['place'] != None:
           tweet['place'] = {}
           tweet['place']['name'] = str(all_data['place']['full_name'])

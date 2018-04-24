@@ -84,7 +84,9 @@ def getTextData(tweet, json_data):
   return json_data
 
 def getUserData(tweet, json_data):
-  json_data['user'] = tweet.user.name
+  json_data['user'] = {}
+  json_data['user']['name'] = tweet.user.name
+  json_data['user']['location'] = tweet.user.location
   return json_data
 
 def getPlaceData(tweet, json_data):
