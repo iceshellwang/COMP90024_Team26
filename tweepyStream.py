@@ -32,7 +32,7 @@ class listener(StreamListener):
     try:
       all_data = json.loads(data)
       if all_data['lang'] == 'en':
-        print("Getting Data", all_data)
+        # print("Getting Data", all_data)
         tweet = {}
         tweet_id = all_data["id"]
         tweet['text'] = all_data["text"]
@@ -45,7 +45,7 @@ class listener(StreamListener):
           tweet['place']['coordinates'] = str(all_data['place']['bounding_box']['coordinates'])
         try:
           tweet['created_at'] = str(datetime.strptime(all_data["created_at"],'%a %b %d %H:%M:%S +0000 %Y') + timedelta(hours=10))
-          print(json.dumps(tweet))
+          # print(json.dumps(tweet))
         except Exception as e:
           print(e)
         if all_data["geo"] != None or all_data['coordinates'] != None:
@@ -65,6 +65,7 @@ class listener(StreamListener):
             print(tweet)
         else:
           try:
+            # print(tweet)
             original_db[str(tweet_id)] = tweet
           except Exception as e:
             print(e)
@@ -95,6 +96,7 @@ if __name__ == '__main__':
         continue
 
     for i in range(len(tokens)):
+      i = 5
       auth = OAuthHandler(tokens[i]['ConsumerKey'], tokens[i]['ConsumerSecret'],)
       auth.set_access_token(tokens[i]['AccessToken'], tokens[i]['AccessTokenSecret'])
       twitterStream = Stream(auth, listener())
