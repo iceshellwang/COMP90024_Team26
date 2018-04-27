@@ -13,9 +13,17 @@ def create_default_couchDB_security_group():
                                       from_port=5984,
                                       to_port=5984,
                                       cidr_ip="0.0.0.0/0")
-  security_group.authorize(ip_protocol='udp',
-                                      from_port=5984,
-                                      to_port=5984,
+  security_group.authorize(ip_protocol='tcp',
+                                      from_port=5986,
+                                      to_port=5986,
+                                      cidr_ip="0.0.0.0/0")
+  security_group.authorize(ip_protocol='tcp',
+                                      from_port=4369,
+                                      to_port=4369,
+                                      cidr_ip="0.0.0.0/0")
+  security_group.authorize(ip_protocol='tcp',
+                                      from_port=9100,
+                                      to_port=9200,
                                       cidr_ip="0.0.0.0/0")
   print "Successfully created"
 
