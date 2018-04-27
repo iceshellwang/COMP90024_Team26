@@ -1,0 +1,82 @@
+---
+
+
+
+- name: Set node username and password
+  uri:
+    url: http://127.0.0.1:5984/_node/couchdb@{{ inventory_hostname }}/_config/admins/admin
+    user: admin
+    password: admin
+    method: PUT
+    body: '"admin"'
+    force_basic_auth: yes
+    status_code: 200
+
+- name: Set node to listening
+  uri:
+    url: http://127.0.0.1:5984/_node/couchdb@{{ inventory_hostname }}/_config/chttpd/bind_address
+    user: admin
+    password: admin
+    method: PUT
+    body: '"0.0.0.0"'
+    force_basic_auth: yes
+    status_code: 200
+
+
+- name: Enable cluster
+  uri:
+    url: http://127.0.0.1:5984/_cluster_setup
+    user: admin
+    password: admin
+    method: POST
+    body: '{"action":"enable_cluster","bind_address":"0.0.0.0","username":"admin","password":"admin","node_count":"{{COUNT_NODES}}"}'
+    force_basic_auth: yes
+    status_code: 400,201
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+
+- name: Enable cluster
+  uri:
+    url: http://127.0.0.1:5984/_cluster_setup
+    user: admin
+    password: admin
+    method: POST
+    body: '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"admin", "port": 5984, "remote_node": "{{ item }}", "remote_current_user": "admin", "remote_current_password": "admin" }'
+    force_basic_auth: yes
+    status_code: 201
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+  with_items: "{{groups['servers']}}"
+  when: inventory_hostname == groups.servers[0] and inventory_hostname != item
+
+- name: Add cluster nodes
+  uri:
+    url: http://127.0.0.1:5984/_cluster_setup
+    method: POST
+    user: admin
+    password: admin
+    body: '{"action": "add_node", "host":"{{ item }}", "port": "5984", "username": "admin", "password":"admin"}'
+    force_basic_auth: yes
+    status_code: 201,409
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+  with_items: "{{groups['servers']}}"
+  when: inventory_hostname == groups.servers[0] and inventory_hostname != item
+
+
+- name: finish the cluster
+  uri:
+    url: http://127.0.0.1:5984/_cluster_setup
+    method: POST
+    user: admin
+    password: admin
+    body: '{"action": "finish_cluster"}'
+    force_basic_auth: yes
+    status_code: 201
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+  when: inventory_hostname == groups.servers[0]

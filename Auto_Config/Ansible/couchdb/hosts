@@ -1,0 +1,4 @@
+
+[servers]
+115.146.86.154 configure_cluster=True
+115.146.86.110 configure_cluster=True

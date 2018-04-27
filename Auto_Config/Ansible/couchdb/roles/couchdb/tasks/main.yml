@@ -1,0 +1,116 @@
+---
+Download and install EPEL for Centos/RHEL version 6
+- name: Download couchdb
+  get_url: url=http://mirrors.advancedhosters.com/apache/couchdb/source/2.1.1/apache-couchdb-2.1.1.tar.gz dest=/database/apache-couchdb-2.1.1.tar.gz
+
+- name: Start CouchDB
+  command: sudo sv stop couchdb
+
+- name: Start CouchDB
+  command: sudo rm -r /database/apache-couchdb-2.1.1
+
+- name: unarchive the .tar.gz file
+  shell: tar -xvzf apache-couchdb-2.1.1.tar.gz chdir=/database
+  tags: unarchive
+
+- name: Install the dependencies build-essential
+  apt:
+    name: build-essential
+    update_cache: yes
+
+- name: Install the dependencies pkg-config
+  apt:
+    name: pkg-config
+
+- name: Install the dependencies erlang
+  apt:
+    name: erlang
+
+- name: Install the dependencies libicu-dev
+  apt:
+    name: libicu-dev
+
+- name: Install the dependencies libmozjs185-dev
+  apt:
+    name: libmozjs185-dev
+
+- name: Install the dependencies libcurl4-openssl-dev
+  apt:
+    name: libcurl4-openssl-dev
+
+- name: Configure build
+  command: ./configure
+  args:
+    chdir: /database/apache-couchdb-2.1.1/
+    creates: /database/apache-couchdb-2.1.1/rel/couchdb.config
+
+- name: Clean /usr/lib/erlang/man path
+  file:
+    state: absent
+    path: /usr/lib/erlang/man
+
+- name: Execute make
+  command: make release
+  args:
+    chdir: /database/apache-couchdb-2.1.1/
+    creates: /database/apache-couchdb-2.1.1/rel/couchdb/
+
+- name: Apply the single node configuration
+  copy: src=single_node.local.ini dest=/database/apache-couchdb-2.1.1/rel/couchdb/etc/local.ini
+  when: configure_cluster == False
+
+- name: Apply the cluster configuration
+  copy: src=cluster.local.ini dest=/database/apache-couchdb-2.1.1/rel/couchdb/etc/local.ini
+  when: configure_cluster == True
+
+- name: Apply the cluster configuration
+  copy: src=sys.config dest=/database/apache-couchdb-2.1.1/rel/couchdb/releases/2.1.1/sys.config
+  when: configure_cluster == True
+
+- name: Install runit
+  apt:
+    name: runit
+
+- name: Creates directory /var/log/couchdb
+  file: path=/var/log/couchdb state=directory
+
+- name: Creates directory /etc/sv/couchdb
+  file: path=/etc/sv/couchdb state=directory
+
+- name: Creates directory /etc/sv/couchdb/log
+  file: path=/etc/sv/couchdb/log state=directory
+
+- name: Create /etc/sv/couchdb/log/run script
+  copy:
+    src: log_run
+    dest: /etc/sv/couchdb/log/run
+    mode: u+x
+
+- name: Create /etc/sv/couchdb/run script
+  copy:
+    src: run
+    dest: /etc/sv/couchdb/run
+    mode: u+x
+
+- name: Create link
+  file:
+    src: /etc/sv/couchdb/
+    dest: /etc/service/couchdb
+    state: link
+
+- name: change the vm.args file
+  template: src=vm.args.j2 dest=/database/apache-couchdb-2.1.1/rel/couchdb/etc/vm.args
+
+- name: Apply the cluster configuration
+  copy: src=sys.config dest=/database/apache-couchdb-2.1.1/rel/couchdb/releases/2.1.1/sys.config
+  when: configure_cluster == True
+
+- name: Start CouchDB
+  command: sudo sv start couchdb
+
+- name: sleep for 10 seconds waiting CouchDB
+  wait_for: timeout=10
+
+- include: configure-cluster.yaml
+  when: configure_cluster
+  tags: configure_cluster

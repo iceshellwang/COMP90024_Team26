@@ -1,0 +1,5 @@
+---
+magic_cookie: "I like chocolate cookies."
+configure_cluster: true
+release_candidate: RC4
+COUNT_NODES: 2

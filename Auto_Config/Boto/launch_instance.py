@@ -1,7 +1,7 @@
 from nectar import ec2_conn
 import time
 
-INSTANCES_NUMBER = 3
+INSTANCES_NUMBER = 2
 
 
 def create_default_couchDB_security_group():
@@ -65,12 +65,12 @@ def set_security_groups():
 
 def create_instances(num = 1):
   print "Creating instances"
-  reservation = ec2_conn.run_instances('ami-a9d574bc',
+  reservation = ec2_conn.run_instances('ami-190a1773',
                                         key_name='Jiawei',
                                         min_count=1,
                                         max_count=num,
-                                        instance_type='m1.small',
-                                        placement="melbourne-np",
+                                        instance_type='m2.medium',
+                                        placement="melbourne-qh2",
                                         security_groups=['default_couchDB','default_HTTP/HTTPS','default_SSH'])
   print "Successfully created"
   return reservation
@@ -86,7 +86,7 @@ def create_volumes(num):
   print "Creating volumes"
   volumes = []
   for i in range(num):
-    volume = ec2_conn.create_volume(30, "melbourne-np")
+    volume = ec2_conn.create_volume(50, "melbourne-qh2")
     volumes.append(volume)
   print "Successfully Created"
   return volumes

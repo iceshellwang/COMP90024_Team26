@@ -1,0 +1,4 @@
+#!/bin/sh
+export HOME=/database/apache-couchdb-2.1.1/rel/couchdb
+exec 2>&1
+exec /database/apache-couchdb-2.1.1/rel/couchdb/bin/couchdb
