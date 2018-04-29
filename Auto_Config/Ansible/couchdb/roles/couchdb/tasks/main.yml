@@ -1,13 +1,16 @@
 ---
-Download and install EPEL for Centos/RHEL version 6
+# Download and install EPEL for Centos/RHEL version 6
+
 - name: Download couchdb
   get_url: url=http://mirrors.advancedhosters.com/apache/couchdb/source/2.1.1/apache-couchdb-2.1.1.tar.gz dest=/database/apache-couchdb-2.1.1.tar.gz
 
-- name: Start CouchDB
-  command: sudo sv stop couchdb
+# - name: Start CouchDB
+#   command: sudo sv stop couchdb
+#   ignore_errors: yes
 
-- name: Start CouchDB
-  command: sudo rm -r /database/apache-couchdb-2.1.1
+# - name: Start CouchDB
+#   command: sudo rm -r /database/apache-couchdb-2.1.1
+#   ignore_errors: yes
 
 - name: unarchive the .tar.gz file
   shell: tar -xvzf apache-couchdb-2.1.1.tar.gz chdir=/database
