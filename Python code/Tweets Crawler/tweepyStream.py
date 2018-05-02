@@ -17,10 +17,8 @@ access_token = "1206790807-Qk3tsBTAnlFv0ntcQMAWS6jy4j0cNFitUBDHFwt"
 access_token_secret = "AkKsz3McpIXSmsrEPVKc27jmMsfUSRIlwIaN2pW7AjnrN"
 
 couch = couchdb.Server()
-couch = couchdb.Server('http://admin:admin@172.17.0.2:5984/')
+couch = couchdb.Server('http://admin:admin@localhost:5984/')
 db = couch['twitter']
-couch2 = couchdb.Server()
-couch2 = couchdb.Server('http://admin:admin@localhost:5984/')
 original_db = couch2['other_twitter']
 
 

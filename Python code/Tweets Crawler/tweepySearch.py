@@ -13,16 +13,13 @@ QUERY_GEOCODE         = "-37.810142,144.964302,250km"
 ACCESS_TOKENS_FILE    = "tokens.json"
 QUERY_TIME_LIMIT      = 16 * 60
 
-couchdb_address = 'http://admin:admin@172.17.0.2:5984/'
+couchdb_address = 'http://admin:admin@localhost:5984/'
 couchdb_dbname = 'twitter'
 
 couch = couchdb.Server()
 couch = couchdb.Server(couchdb_address)
-db = couch[couchdb_dbname]
-
-couch2 = couchdb.Server()
-couch2 = couchdb.Server('http://admin:admin@localhost:5984/')
-original_db = couch2['other_twitter']
+db = couch['twitter']
+original_db = couch['other_twitter']
 
 
 def searchTweets(consumer_key, consumer_secret, access_token, access_token_secret, t_id):
