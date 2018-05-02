@@ -7,14 +7,10 @@ from tweepy import Stream
 from tweepy import OAuthHandler
 from tweepy.streaming import StreamListener
 import timeit
+import sys
 from datetime import timedelta
 from datetime import datetime
 
-
-consumer_key = "fx8DdDJ72wJfygl89KMFuJglK"
-consumer_secret = "nbty0xkOPR6vzkrchHPI9PxStppGj0i92RVdGCgolihMxhF9zp"
-access_token = "1206790807-Qk3tsBTAnlFv0ntcQMAWS6jy4j0cNFitUBDHFwt"
-access_token_secret = "AkKsz3McpIXSmsrEPVKc27jmMsfUSRIlwIaN2pW7AjnrN"
 
 couch = couchdb.Server()
 couch = couchdb.Server('http://admin:admin@localhost:5984/')
@@ -77,7 +73,29 @@ class listener(StreamListener):
       print(status)
 
 
+def read_arguments(argv):
+  # Initialise Variables
+  total_nodes = 1
+  node_rank = 1
+  # Try to read in arguments
+  for opt, arg in zip(argv[0::2], argv[1::2]):
+    if opt in ("-t"):
+      total_nodes = int(arg)
+    if opt in ("-r"):
+      node_rank = int(arg)
+  total_nodes = min(total_nodes, 4)
+  total_nodes = max(total_nodes, 1)
+  if node_rank > total_nodes:
+    node_rank = total_nodes
+  # Return all the arguments
+  return total_nodes - 1, node_rank - 1
+
+
+
+
 if __name__ == '__main__':
+  argv = sys.argv[1:]
+  total_nodes, node_rank = read_arguments(argv)
 
   while True:
     start = timeit.default_timer()
@@ -98,8 +116,13 @@ if __name__ == '__main__':
       auth = OAuthHandler(tokens[i]['ConsumerKey'], tokens[i]['ConsumerSecret'],)
       auth.set_access_token(tokens[i]['AccessToken'], tokens[i]['AccessTokenSecret'])
       twitterStream = Stream(auth, listener())
+      long_diff = 146.1 - 143.9
+      each_diff = long_diff / total_nodes
       try:
-        twitterStream.filter(locations=[143.9,-38.5,146.1,-37.1])
+        twitterStream.filter(locations=[143.9 + each_diff * node_rank,
+                                        -38.5,
+                                        143.9 + each_diff * (node_rank + 1),
+                                        -37.1])
       except Exception as e:
         print(e)
         twitterStream.disconnect()

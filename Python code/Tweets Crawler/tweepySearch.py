@@ -4,12 +4,16 @@ import tweepy
 import time
 import timeit
 import datetime
+import sys
 from datetime import timedelta
 
 MAX_TWEET_ID          = 999999999999999999999999
 QUERY_TEXT            = "*"
 QUERY_LANGUAGE        = "en"
-QUERY_GEOCODE         = "-37.810142,144.964302,250km"
+QUERY_GEOCODE         = [["-37.810142,144.964302,250km"],
+                          ["-37.908237,145.233532,150km", "-37.637713,144.838693,150km"],
+                          ["-37.765395,145.221438,100km", "-37.637713,144.838693,100km", "-38.394348,144.990496,100km"],
+                          ["-37.616531,144.766807,60km", "-37.598865,145.225853,60km", "-37.930067,145.399944,60km", "-38.394348,144.990496,60km"]]
 ACCESS_TOKENS_FILE    = "tokens.json"
 QUERY_TIME_LIMIT      = 16 * 60
 
@@ -22,7 +26,7 @@ db = couch['twitter']
 original_db = couch['other_twitter']
 
 
-def searchTweets(consumer_key, consumer_secret, access_token, access_token_secret, t_id):
+def searchTweets(consumer_key, consumer_secret, access_token, access_token_secret, t_id, total_nodes, node_rank):
   auth = tweepy.auth.OAuthHandler(consumer_key, consumer_secret)
   auth.set_access_token(access_token, access_token_secret)
   api = tweepy.API(auth)
@@ -35,7 +39,7 @@ def searchTweets(consumer_key, consumer_secret, access_token, access_token_secre
                                   q = QUERY_TEXT,
                                   lang = "en",
                                   until = date_str,
-                                  geocode = QUERY_GEOCODE).items():
+                                  geocode = QUERY_GEOCODE[total_nodes][node_rank]).items():
         temp_t_id = processTweet(tweet)
         if temp_t_id < min_t_id:
           min_t_id = temp_t_id
@@ -48,7 +52,7 @@ def searchTweets(consumer_key, consumer_secret, access_token, access_token_secre
                                   q = QUERY_TEXT,
                                   lang = QUERY_LANGUAGE,
                                   max_id = str(t_id),
-                                  geocode=QUERY_GEOCODE).items():
+                                  geocode=QUERY_GEOCODE[total_nodes][node_rank]).items():
         temp_t_id = processTweet(tweet)
         if temp_t_id < min_t_id:
           min_t_id = temp_t_id
@@ -56,6 +60,7 @@ def searchTweets(consumer_key, consumer_secret, access_token, access_token_secre
       print(e)
       return min_t_id
   print("Error")
+  print(QUERY_GEOCODE[total_nodes][node_rank])
   return min_t_id
 
 def getGeoData(tweet, json_data):
@@ -137,8 +142,26 @@ def processTweet(tweet):
         print(e1)
   return tweet_id
 
+def read_arguments(argv):
+  # Initialise Variables
+  total_nodes = 1
+  node_rank = 1
+  # Try to read in arguments
+  for opt, arg in zip(argv[0::2], argv[1::2]):
+    if opt in ("-t"):
+      total_nodes = int(arg)
+    if opt in ("-r"):
+      node_rank = int(arg)
+  total_nodes = min(total_nodes, 4)
+  total_nodes = max(total_nodes, 1)
+  if node_rank > total_nodes:
+    node_rank = total_nodes
+  # Return all the arguments
+  return total_nodes - 1, node_rank - 1
 
 if __name__ == '__main__':
+  argv = sys.argv[1:]
+  total_nodes, node_rank = read_arguments(argv)
   mango = {'selector':{'_id':{"$gt":None}}, 'fields':['_id'],"sort":[{"_id":"asc"}]}
   tweet_id = int(list(db.find(mango))[0]['_id'])
   # tweet_id = 0
@@ -163,7 +186,9 @@ if __name__ == '__main__':
                                 tokens[i]['ConsumerSecret'],
                                 tokens[i]['AccessToken'],
                                 tokens[i]['AccessTokenSecret'],
-                                tweet_id)
+                                tweet_id,
+                                total_nodes,
+                                node_rank)
         if tweet_id == MAX_TWEET_ID:
           tweet_id = 0
         print(tweet_id)
