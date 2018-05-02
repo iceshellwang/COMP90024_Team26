@@ -1,0 +1,189 @@
+Abbotsford // Abbotsford
+Aberfeldie // Essendon - Aberfeldie
+Airport West // Airport West
+Albert Park // Albert Park
+Alphington // Alphington - Fairfield
+Altona Meadows // Altona Meadows
+Altona North // Altona North
+Altona // Altona
+Armadale // Armadale
+Ascot Vale // Ascot Vale
+Bacchus Marsh // Bacchus Marsh
+Balwyn North // Balwyn North
+Balwyn // Balwyn
+Bayswater North // Bayswater North
+Bayswater // Bayswater
+Beaumaris // Beaumaris
+Belgrave // Belgrave - Selby
+Black Rock // Sandringham - Black Rock
+Blackburn South // Blackburn South
+Blackburn // Blackburn
+Bonbeach // Chelsea - Bonbeach
+Boronia // Boronia
+Box Hill North // Box Hill North
+Box Hill // Box Hill
+Briar Hill // Montmorency - Briar Hill
+Brighton East // Brighton East
+Broadmeadows // Broadmeadows
+Brunswick East // Brunswick East
+Brunswick West // Brunswick West
+Brunswick // Brunswick
+Bulla // Greenvale - Bulla
+Bulleen // Bulleen
+Bunyip // Bunyip - Garfield
+Burnside Heights // Burnside Heights
+Burwood East // Burwood East
+Burwood // Burwood
+Camberwell // Camberwell
+Canterbury // Surrey Hills (West) - Canterbury
+Cardigan Village // Dingley Village
+Carlton North // Carlton North - Princes Hill
+Carlton // Carlton
+Carnegie // Carnegie
+Carrum Downs // Carrum Downs
+Chadstone // Ashwood - Chadstone
+Chelsea Heights // Chelsea Heights
+Chirnside Park // Chirnside Park
+Clayton South // Clayton South
+Clayton // Clayton
+Coburg North // Coburg North
+Coburg // Coburg
+Coldstream // Lilydale - Coldstream
+Collingwood // Collingwood
+Cranbourne East // Cranbourne East
+Cranbourne West // Cranbourne West
+Cranbourne // Cranbourne
+Croydon South // Croydon South
+Dandenong // Dandenong
+Daylesford - Hepburn Springs // Caroline Springs
+Delahey // Delahey
+Derrimut // Deer Park - Derrimut
+Docklands // Docklands
+Doncaster // Doncaster
+Dromana // Dromana
+Drysdale - Clifton Springs // Caroline Springs
+East Melbourne // East Melbourne
+Eastern View // Viewbank - Yallambie
+Edithvale // Edithvale - Aspendale
+Elsternwick // Elsternwick
+Eltham // Eltham
+Elwood // Elwood
+Emerald // Emerald - Cockatoo
+Fawkner // Fawkner
+Fitzroy North // Fitzroy North
+Fitzroy // Fitzroy
+Flemington // Flemington
+Flinders // Flinders
+Footscray // Footscray
+Forest Hill // Forest Hill
+Frankston North // Frankston North
+Frankston // Frankston
+Gisborne // Gisborne
+Glen Huntly // Ormond - Glen Huntly
+Glenroy // Glenroy
+Greensborough // Greensborough
+Hadfield // Hadfield
+Hampton Park // Hampton Park - Lynbrook
+Hampton // Hampton
+Hastings // Hastings - Somers
+Hawthorn East // Hawthorn East
+Hawthorn // Hawthorn
+Healesville // Healesville - Yarra Glen
+Heidelberg West // Heidelberg West
+Hepburn Springs // Caroline Springs
+Hughesdale // Hughesdale
+Huntingdale // Oakleigh - Huntingdale
+Ivanhoe // Ivanhoe
+Keilor East // Keilor East
+Keilor // Keilor
+Kensington // Kensington (Vic.)
+Kew East // Kew East
+Kew // Kew
+Keysborough // Keysborough
+Kinglake // Kinglake
+Kings Park // Kings Park (Vic.)
+Kingsbury // Kingsbury
+Kingsville // Seddon - Kingsville
+Knoxfield // Knoxfield - Scoresby
+Koo Wee Rup // Koo Wee Rup
+Lal Lal // Lalor
+Lang Lang // Langwarrin
+Lilydale // Lilydale - Coldstream
+Long Forest // Forest Hill
+Macedon // Macedon
+Malvern East // Malvern East
+Maribyrnong // Maribyrnong
+Melbourne Airport // Melbourne Airport
+Melbourne // Melbourne
+Melton South // Melton South
+Melton West // Melton West
+Melton // Melton
+Mentone // Mentone
+Mernda // Mernda
+Mitcham // Mitcham (Vic.)
+Monbulk // Monbulk - Silvan
+Montmorency // Montmorency - Briar Hill
+Moonee Ponds // Moonee Ponds
+Mooroolbark // Mooroolbark
+Mordialloc // Mordialloc - Parkdale
+Mornington // Mornington
+Mount Dandenong // Mount Dandenong - Olinda
+Mount Eliza // Mount Eliza
+Mount Martha // Mount Martha
+Mulgrave // Mulgrave
+Murrumbeena // Murrumbeena
+Newport // Newport
+North Melbourne // North Melbourne
+Northcote // Northcote
+Oakleigh South // Clarinda - Oakleigh South
+Officer // Beaconsfield - Officer
+Ormond // Ormond - Glen Huntly
+Panton Hill // Panton Hill - St Andrews
+Parkdale // Mordialloc - Parkdale
+Parkville // Parkville
+Pascoe Vale // Pascoe Vale
+Patterson Lakes // Carrum - Patterson Lakes
+Port Melbourne // Port Melbourne
+Prahran // Prahran - Windsor
+Princes Hill // Carlton North - Princes Hill
+Richmond // Richmond (Vic.)
+Riddells Creek // Riddells Creek
+Ringwood East // Ringwood East
+Ringwood // Ringwood
+Rockbank // Rockbank - Mount Cottrell
+Romsey // Romsey
+Rosebud // Rosebud - McCrae
+Sandhurst // Skye - Sandhurst
+Sandringham // Sandringham - Black Rock
+Seaford // Seaford (Vic.)
+Seville // Wandin - Seville
+Skye // Skye - Sandhurst
+South Melbourne // South Melbourne
+Southbank // Southbank
+St Kilda East // St Kilda East
+St Kilda // St Kilda
+Sunbury // Sunbury
+Tarneit // Tarneit
+Templestowe Lower // Templestowe Lower
+Templestowe // Templestowe
+The Basin // The Basin
+Thornbury // Thornbury
+Tooradin // Pearcedale - Tooradin
+Toorak // Toorak
+Tullamarine // Tullamarine
+Upper Ferntree Gully // Ferntree Gully (South) - Upper Ferntree Gully
+Upwey // Upwey - Tecoma
+Vermont // Vermont
+Wallan // Wallan
+Wantirna South // Wantirna South
+Wantirna // Wantirna
+Waurn Ponds // Moonee Ponds
+West Footscray // West Footscray - Tottenham
+West Melbourne // West Melbourne
+Wheelers Hill // Wheelers Hill
+Whittlesea // Whittlesea
+Williamstown // Williamstown
+Windsor // Prahran - Windsor
+Wonga Park // Warrandyte - Wonga Park
+Yarra Glen // Healesville - Yarra Glen
+Yarraville // Yarraville

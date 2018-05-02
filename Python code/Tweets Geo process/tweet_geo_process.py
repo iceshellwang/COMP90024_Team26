@@ -9,14 +9,15 @@ COUCHDB_TWEETS_DBNAME = 'twitter'
 couch = couchdb.Server()
 couch = couchdb.Server(COUCHDB_ADDRESS)
 db = couch[COUCHDB_TWEETS_DBNAME]
+otherdb = couch['other_twitter']
 
 melbourne = gpd.read_file('Simplify_Melbourne_SA2.geojson')
 
 json_file = open("tweet_geo_count.json", "w")
+place_sa2_file = open("place_sa2_maping_result.txt", "r")
 
 
 def process_geo_location_data(db, geojson_data):
-  tweet_geo_count = {}
   counter = 0
   while True:
     mango = {'selector':{'_id':{"$gt":None}}, "sort":[{"_id":"asc"}], "limit":1000, "skip": counter*1000}
@@ -57,18 +58,23 @@ def process_geo_location_data(db, geojson_data):
             doc['SA2_MAIN16'] = main_16
             doc['SA2_NAME16'] = name_16
             db[tweet_id] = doc
-            tweet_geo_count[main_16] = tweet_geo_count.get(main_16, 0) + 1
             break
-  return tweet_geo_count
+
+def place_sa2_file_preprocess(place_sa2_file):
+  result = {}
+  for line in place_sa2_file.readlines():
+    temp = line.split("//")
+    key = temp[0].strip()
+    value = temp[1].strip()
+    result[key] = value
+  return result
 
 
-def process_geo_place_data(db, geojson_data):
-  tweet_geo_count = {}
-  temp = []
+def process_geo_place_data(db, otherdb, place_sa2_data, geojson_data):
   counter = 0
   while True:
     mango = {'selector':{'_id':{"$gt":None}}, "sort":[{"_id":"asc"}], "limit":1000, "skip": counter*1000}
-    results = list(db.find(mango))
+    results = list(otherdb.find(mango))
     if len(results) == 0:
       break
 
@@ -76,14 +82,26 @@ def process_geo_place_data(db, geojson_data):
     for result in results:
       try:
         place_name = result['place']['name']
-        print(place_name)
-        temp.append(place_name)
+        sa2_main = place_sa2_data[place_name]
+        for index, row in geojson_data.iterrows():
+          main_16 = row['SA2_MAIN16']
+          name_16 = row['SA2_NAME16']
+          if sa2_main == main_16:
+            doc = otherdb[tweet_id]
+            doc['SA2_MAIN16'] = main_16
+            doc['SA2_NAME16'] = name_16
+            otherdb[tweet_id] = doc
+            del doc['_rev']
+            del doc ['_id']
+            db[tweet_id] = doc
+            break
+
       except:
         pass
-  print(set(temp))
 
-process_geo_place_data(db, melbourne)
-# tweet_geo_count = process_geo_location_data(db, melbourne)
+place_sa2_data = place_sa2_file_preprocess(place_sa2_file)
+process_geo_place_data(db, otherdb, place_sa2_data, melbourne)
+process_geo_location_data(db, melbourne)
 # json_obj = {}
 # json_obj['type'] = 'FeatureCollection'
 # json_obj['bbox'] = [0.0,0.0,-1.0,-1.0]
