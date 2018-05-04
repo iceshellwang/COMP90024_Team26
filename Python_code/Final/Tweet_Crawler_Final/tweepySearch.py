@@ -142,7 +142,7 @@ def read_arguments(argv):
   total_nodes = min(total_nodes, 4)
   total_nodes = max(total_nodes, 1)
   node_rank = min(total_nodes, node_rank)
-  node_rank = max(1, node_rank)
+  node_rank = max(0, node_rank)
   # Return all the arguments
   return total_nodes - 1, node_rank
 
