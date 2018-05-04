@@ -1,3 +1,9 @@
 
-[servers]
-43.240.98.163 configure_cluster=False
+[crawler]
+115.146.86.11 configure_cluster=False
+
+[preprocess]
+115.146.86.130 configure_cluster=False
+
+[web_server]
+115.146.86.146 configure_cluster=False
