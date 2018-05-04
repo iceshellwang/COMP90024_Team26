@@ -1,7 +1,7 @@
 from nectar import ec2_conn
 import time
 
-INSTANCES_NUMBER = 2
+INSTANCES_NUMBER = 3
 
 
 def create_default_couchDB_security_group():
