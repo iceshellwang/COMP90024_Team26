@@ -3,6 +3,7 @@ from shapely.geometry import Point, Polygon
 import couchdb
 import json
 import sentiment_mod as sentiment
+import sys
 
 COUCHDB_ADDRESS = 'http://admin:admin@localhost:5984/'
 COUCHDB_TWEETS_DBNAME = 'preprocess_twitter'
