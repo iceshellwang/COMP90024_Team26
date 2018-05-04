@@ -21,7 +21,7 @@ else:
 
 def tweets_geo_sentiment_count(db, geodb):
   tweet_geo_sentment_dict = {}
-  for item in db.view('sentiment/sa2_sentiment', group=True):
+  for item in db.view('sentiment/sa2_sentiment', stale="update_after", group=True):
     print(item)
     sa2_main = item.key[0]
     if sa2_main != None:
