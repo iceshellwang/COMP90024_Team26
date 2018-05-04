@@ -48,8 +48,8 @@
     body_format: json
     headers:
       Content-Type: "application/json"
-  with_items: "{{groups['servers']}}"
-  when: inventory_hostname == groups.servers[0] and inventory_hostname != item
+  with_items: "{{groups['crawler']}}"
+  when: inventory_hostname == groups.crawler[0] and inventory_hostname != item
 
 - name: Add cluster nodes
   uri:
@@ -63,8 +63,8 @@
     body_format: json
     headers:
       Content-Type: "application/json"
-  with_items: "{{groups['servers']}}"
-  when: inventory_hostname == groups.servers[0] and inventory_hostname != item
+  with_items: "{{groups['crawler']}}"
+  when: inventory_hostname == groups.crawler[0] and inventory_hostname != item
 
 
 - name: finish the cluster

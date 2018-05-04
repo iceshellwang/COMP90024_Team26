@@ -7,19 +7,9 @@
   apt:
     name: git
 
-# - name: Pip config
-#   command: sudo export LC_ALL="en_US.UTF-8"
-#   ignore_errors: yes
-
-# - name: Pip config
-#   command: export LC_CTYPE="en_US.UTF-8"
-#   ignore_errors: yes
-
 - name: Locales
   command: "{{ item }}"
   with_items:
-    - export LC_ALL="en_US.UTF-8"
-    - export LC_CTYPE="en_US.UTF-8"
     - dpkg-reconfigure locales -f noninteractive
 
 - name: Pip install packages
@@ -40,15 +30,24 @@
     dest: /home/ubuntu/COMP90024_Team26
 
 - name: Run tweepySearch.py
-  command: nohup python3 tweepySearch.py </dev/null >/dev/null 2>&1 &
+  vars:
+    HOST_COUNT: "{{ groups['crawler'] | length }}"
+    current_index: "{{ ansible_play_batch.index(inventory_hostname) }}"
+  command: "python3 tweepySearch.py -t {{ HOST_COUNT }} -r {{ current_index }}"
   args:
     chdir: /home/ubuntu/COMP90024_Team26/Python_code/Final/Tweet_Crawler_Final/
+  async: 5
+  poll: 0
 
 - name: Run tweepyStream.py
-  command: nohup python3 tweepyStream.py </dev/null >/dev/null 2>&1 &
+  vars:
+    HOST_COUNT: "{{ groups['crawler'] | length }}"
+    current_index: "{{ ansible_play_batch.index(inventory_hostname) }}"
+  command: "python3 tweepyStream.py -t {{ HOST_COUNT }} -r {{ current_index }}"
   args:
     chdir: /home/ubuntu/COMP90024_Team26/Python_code/Final/Tweet_Crawler_Final/
-
+  async: 5
+  poll: 0
 
 
 

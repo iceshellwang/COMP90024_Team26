@@ -68,7 +68,7 @@ class listener(StreamListener):
 def read_arguments(argv):
   # Initialise Variables
   total_nodes = 1
-  node_rank = 1
+  node_rank = 0
   # Try to read in arguments
   for opt, arg in zip(argv[0::2], argv[1::2]):
     if opt in ("-t"):
@@ -77,10 +77,10 @@ def read_arguments(argv):
       node_rank = int(arg)
   total_nodes = min(total_nodes, 4)
   total_nodes = max(total_nodes, 1)
-  if node_rank > total_nodes:
-    node_rank = total_nodes
+  node_rank = min(total_nodes, node_rank)
+  node_rank = max(1, node_rank)
   # Return all the arguments
-  return total_nodes - 1, node_rank - 1
+  return total_nodes - 1, node_rank
 
 
 

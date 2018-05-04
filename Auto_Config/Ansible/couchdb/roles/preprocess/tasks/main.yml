@@ -1,0 +1,75 @@
+---
+- name: Install pip
+  apt:
+    name: python-pip
+
+- name: Install git
+  apt:
+    name: git
+
+- name: Locales
+  command: "{{ item }}"
+  with_items:
+    - dpkg-reconfigure locales -f noninteractive
+
+- name: Replicate database
+  uri:
+    url: http://localhost:5984/_replicate
+    user: admin
+    password: admin
+    method: POST
+    body: '{"_id": "my_rep", "source": "http://admin:admin@{{ groups.crawler[0] }}:5984/raw_twitter", "target": "http://admin:admin@localhost:5984/raw_twitter", "create_target": true, "continuous": true}'
+    force_basic_auth: yes
+    status_code: 202
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+    when: inventory_hostname == groups.preprocess[0]
+
+- name: Create View
+  uri:
+    url: http://localhost:5984/raw_twitter/_design/place
+    user: admin
+    password: admin
+    method: PUT
+    body: '{"views": {"geo_cooradinate": {"map": "function (doc) {if(doc.geo != null) {emit(doc._id, doc);}else if(doc.coordinates != null) {emit(doc._id, doc);}else if(doc.lat != null) {emit(doc._id, doc);}}"}}}'
+    force_basic_auth: yes
+    status_code: 400,201
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+    when: inventory_hostname == groups.preprocess[0]
+
+- name: Pip install packages
+  command: "{{ item }}"
+  with_items:
+    - pip install tweepy
+    - pip install couchdb
+    - pip install nltk
+    - pip install sklearn
+    - pip install shapely
+    - pip install geopandas
+    - pip install scipy
+
+
+- name: clone git project
+  git:
+    repo: "https://github.com/zjw93615/COMP90024_Team26.git"
+    dest: /home/ubuntu/COMP90024_Team26
+
+- name: Run preprocess_tweets.py
+  vars:
+    HOST_COUNT: "{{ groups['crawler'] | length }}"
+    current_index: "{{ ansible_play_batch.index(inventory_hostname) }}"
+  command: "python preprocess_tweets.py -t {{ HOST_COUNT }} -r {{ current_index }}"
+  args:
+    chdir: /home/ubuntu/COMP90024_Team26/Python_code/Final/Preprocess_Tweets_Final/
+  async: 5
+  poll: 0
+
+
+
+
+
+
+
