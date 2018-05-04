@@ -1,0 +1,18 @@
+
+Adding state to controls
+https://developers.google.com/maps/documentation/javascript/examples/control-custom-state
+
+google.maps.InfoWindow class
+https://developers.google.com/maps/documentation/javascript/reference/3.exp/info-window
+
+信息窗口
+https://developers.google.com/maps/documentation/javascript/infowindows
+
+google.maps.Data class
+https://developers.google.com/maps/documentation/javascript/reference/3.exp/data#Data.StyleOptions
+
+数据层
+https://developers.google.com/maps/documentation/javascript/datalayer
+
+Custom controls
+https://developers.google.com/maps/documentation/javascript/examples/control-custom
