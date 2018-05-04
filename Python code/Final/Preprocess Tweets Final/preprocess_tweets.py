@@ -4,6 +4,13 @@ import couchdb
 import json
 import sentiment_mod as sentiment
 import sys
+import nltk
+import time
+
+try:
+  nltk.download('punkt')
+except:
+  pass
 
 COUCHDB_ADDRESS = 'http://admin:admin@localhost:5984/'
 COUCHDB_TWEETS_DBNAME = 'preprocess_twitter'
@@ -27,12 +34,11 @@ geojson_data = gpd.read_file('Simplify_Melbourne_SA2.geojson')
 def preprocess_twitter(db, rawdb, total_nodes, node_rank, geojson_data):
   temp = node_rank
   while True:
-    # results = rawdb.view('place/geo_cooradinate', skip=1000*temp, limit=1000)
-    mango = {'selector':{'_id':{"$gt":None}}, "sort":[{"_id":"asc"}], "limit":1000, "skip": temp*1000}
-    results = list(rawdb.find(mango))
+    results = rawdb.view('place/geo_cooradinate', stale="update_after", skip=1000*temp, limit=1000)
+    # mango = {'selector':{'_id':{"$gt":None}}, "sort":[{"_id":"asc"}], "limit":1000, "skip": temp*1000}
+    # results = list(rawdb.find(mango))
     if len(results) == 0:
       break
-
     for result in results:
       tweet_id = result.key
       tweet_doc = result.value
@@ -41,7 +47,10 @@ def preprocess_twitter(db, rawdb, total_nodes, node_rank, geojson_data):
       tweet_doc = process_sa2_location(tweet_doc, geojson_data)
       tweet_doc = process_sentiment(tweet_doc)
       # tweet_doc = process_textblob_sentiment(tweet_doc)
-      db[tweet_id] = tweet_doc
+      try:
+        db[tweet_id] = tweet_doc
+      except:
+        pass
     temp += total_nodes
 
 def process_sentiment(tweet_doc):
