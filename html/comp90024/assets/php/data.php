@@ -5,7 +5,7 @@
     $path['call_parts'][0] = 'home';
   }
 
-  function getPageData($path,$dbc)
+  function getPageData($path)
   {
     if(!isset($path['call_parts'][0]) || $path['call_parts'][0] == '') {
       include("homePage.php");
