@@ -7,8 +7,10 @@ GEO_DBNAME = 'geo_db'
 
 couch = couchdb.Server()
 couch = couchdb.Server(COUCHDB_ADDRESS)
-
-geo_db = couch.create(GEO_DBNAME)
+try:
+  geo_db = couch.create(GEO_DBNAME)
+except:
+  geo_db = couch[GEO_DBNAME]
 
 geojson_data = gpd.read_file('FinalTotalAttribute.geojson')
 for index, row in geojson_data.iterrows():
@@ -20,7 +22,13 @@ for index, row in geojson_data.iterrows():
   data['person_did_not_go_to_school_total'] = int(row['data7892875890288123329_Person_Did_Not_Go_To_School_Total'])
   data['person_medical_help'] = int(row['data1854632499827315136_hc_sa_med_oth_hcs_p'])
   data['non_school_qualifications_total'] = int(row['Non-school qualifications Certificate Level Total Persons_non_sc_quals_certtot_level_p'])
-  data['voluntaay_work_total'] = int(row['Persons Total Voluntary work_p_total_total'])
+  data['voluntary_work_total'] = int(row['Persons Total Voluntary work_p_total_total'])
   data['moving_house'] = int(row['Same usual address 1 year ago as in 2016 Persons_sme_usl_ad_1_yr_ago_as_2016_p'])
   data['person_participate_educational_institution'] = int(row['Type of educational institution Total Persons_tot_totp'])
-  geo_db[data['main_16']] = data
+  data['pos'] = int(row['pos'])
+  data['neg'] = int(row['neg'])
+  data['pos_rate'] = float(row['pos_rate'])
+  try:
+    geo_db[data['main_16']] = data
+  except:
+    pass

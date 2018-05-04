@@ -5,5 +5,5 @@
   sudo: yes
 
   roles:
-    # - mount
+    - mount
     - couchdb

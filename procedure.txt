@@ -1,0 +1,15 @@
+1.create tweets crawler instances and install couchdb
+2.tweepy search and stream get raw tweets (including place, geo, coordinate, and non-geoinformation tweets)
+3.create tweet preprocess instances and install couchdb
+4.replicate the 'raw_twitter' database to the new preprocess instances
+5.create couchdb view to show all the tweets that include place geo coordinate attribute
+6.process all the tweets in the view and allocate the sa2 and sentiment tag for the tweets
+7.create web backend instance and install couchdb
+8.replicate the preprocess tweets database to the new couchdb
+9.load other aurin geojson data to the couchdb
+10.create index for each attribute in the geojson database
+11.create view for the preprocess tweets with key [sa2, sentiment] [hour, sentiment]
+12.process the view and write sentiment data into geojson database
+13.install apache, php
+14.auto create new geojson include sentiment data
+15.display the website
