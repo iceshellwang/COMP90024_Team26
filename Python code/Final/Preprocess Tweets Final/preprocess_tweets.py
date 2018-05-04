@@ -29,7 +29,7 @@ def preprocess_twitter(db, rawdb, total_nodes, node_rank, geojson_data):
   while True:
     # results = rawdb.view('place/geo_cooradinate', skip=1000*temp, limit=1000)
     mango = {'selector':{'_id':{"$gt":None}}, "sort":[{"_id":"asc"}], "limit":1000, "skip": temp*1000}
-    results = list(db.find(mango))
+    results = list(rawdb.find(mango))
     if len(results) == 0:
       break
 
