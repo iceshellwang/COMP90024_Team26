@@ -1,5 +1,6 @@
 import json
 import couchdb
+import time
 
 COUCHDB_ADDRESS = 'http://admin:admin@localhost:5984/'
 GEO_DBNAME = 'geo_db'
@@ -35,5 +36,5 @@ while True:
   geojson_file.write(json.dumps(geojson_data))
   geojson_file.close()
 
-  sleep(10*60)
+  time.sleep(10*60)
 
