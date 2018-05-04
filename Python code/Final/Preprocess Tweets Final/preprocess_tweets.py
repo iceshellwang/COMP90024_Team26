@@ -27,7 +27,9 @@ geojson_data = gpd.read_file('Simplify_Melbourne_SA2.geojson')
 def preprocess_twitter(db, rawdb, total_nodes, node_rank, geojson_data):
   temp = node_rank
   while True:
-    results = rawdb.view('place/geo_cooradinate', skip=1000*temp, limit=1000)
+    # results = rawdb.view('place/geo_cooradinate', skip=1000*temp, limit=1000)
+    mango = {'selector':{'_id':{"$gt":None}}, "sort":[{"_id":"asc"}], "limit":1000, "skip": temp*1000}
+    results = list(db.find(mango))
     if len(results) == 0:
       break
 
