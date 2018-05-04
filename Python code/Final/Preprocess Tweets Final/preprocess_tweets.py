@@ -37,12 +37,24 @@ def preprocess_twitter(db, rawdb, total_nodes, node_rank, geojson_data):
       del tweet_doc['_rev']
       tweet_doc = process_sa2_location(tweet_doc, geojson_data)
       tweet_doc = process_sentiment(tweet_doc)
+      # tweet_doc = process_textblob_sentiment(tweet_doc)
       db[tweet_id] = tweet_doc
     temp += total_nodes
 
 def process_sentiment(tweet_doc):
   tweet = tweet_doc['text']
   tweet_doc['SENTIMENT'] = sentiment.sentiment(tweet)
+  return tweet_doc
+
+def process_textblob_sentiment(tweet_doc):
+  tweet = tweet_doc['text']
+  blob = TextBlob(tweet)
+  if blob.sentiment[0]> 0.3:
+     tweet_doc['SENTIMENT'] = 'pos'
+  elif blob.sentiment[0]>= -0.3:
+     tweet_doc['SENTIMENT'] = 'neu'
+  else:
+     tweet_doc['SENTIMENT'] = 'neg'
   return tweet_doc
 
 def process_sa2_location(tweet_doc, geojson_data):
