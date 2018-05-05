@@ -320,9 +320,19 @@
   apt:
     name: php7.0-xml
 
-- name: Copy
+- name: Apply the cluster configuration
+  copy: src=apache2.conf dest=/etc/apache2/apache2.conf
+
+- name: Copy html to apache
   copy:
     src: /home/ubuntu/COMP90024_Team26/html/comp90024
     dest: /var/www/html
     remote_src: yes
     directory_mode: yes
+
+- name: Enable apache rewrite
+  command: "sudo a2enmod rewrite"
+
+- name: Restart apache
+  command: "sudo systemctl restart apache2"
+
