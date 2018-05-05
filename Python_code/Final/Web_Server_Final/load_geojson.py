@@ -11,19 +11,18 @@ try:
 except:
   geo_db = couch[GEO_DBNAME]
 
-geojson_data = gpd.read_file('FinalTotalAttribute.geojson')
+geojson_data = gpd.read_file('Total_Attributes_In_Percent_Form.geojson')
 for index, row in geojson_data.iterrows():
   data = {}
   data['main_16'] = row['SA2_MAIN16']
   data['name_16'] = row['SA2_NAME16']
-  data['unemployed'] = int(row['data2630464559989593264_p_tot_unemp_tot'])
-  data['income_over_4000'] = int(row['Income of 4000 or more Total_fi_4000_more_tot'])
-  data['person_did_not_go_to_school_total'] = int(row['data7892875890288123329_Person_Did_Not_Go_To_School_Total'])
-  data['person_medical_help'] = int(row['data1854632499827315136_hc_sa_med_oth_hcs_p'])
-  data['non_school_qualifications_total'] = int(row['Non-school qualifications Certificate Level Total Persons_non_sc_quals_certtot_level_p'])
-  data['voluntary_work_total'] = int(row['Persons Total Voluntary work_p_total_total'])
-  data['moving_house'] = int(row['Same usual address 1 year ago as in 2016 Persons_sme_usl_ad_1_yr_ago_as_2016_p'])
-  data['person_participate_educational_institution'] = int(row['Type of educational institution Total Persons_tot_totp'])
+  data['health_care_and_social_assistance'] = row['health_care_and_social_assistance']
+  data['did_not_go_to_schllo_Percent'] = row['did_not_go_to_schllo_Percent']
+  data['place_of_usual_residence_1_year_proportion'] = row['place_of_usual_residence_1_year_proportion']
+  data['bicycle_to_work'] = row['bicycle_to_work']
+  data['weekly_income_4000_more_proportion'] = row['weekly_income_4000_more_proportion']
+  data['unemployed_Percent'] = row['unemployed_Percent']
+  data['volunteer_proportion'] = row['volunteer_proportion']
   try:
     data['pos'] = int(row['pos'])
   except:

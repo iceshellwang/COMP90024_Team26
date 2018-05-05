@@ -21,5 +21,6 @@
   sudo: yes
 
   roles:
-    - mount
-    - couchdb
+    # - mount
+    # - couchdb
+    - webserver

@@ -115,7 +115,7 @@ def read_arguments(argv):
   node_rank = min(total_nodes, node_rank)
   node_rank = max(0, node_rank)
   # Return all the arguments
-  return total_nodes - 1, node_rank
+  return total_nodes, node_rank
 
 
 if __name__ == '__main__':

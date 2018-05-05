@@ -1,7 +1,7 @@
 ---
 - name: Install pip
   apt:
-    name: python-pip
+    name: python3-pip
 
 - name: Install git
   apt:
@@ -45,13 +45,13 @@
 - name: Pip install packages
   command: "{{ item }}"
   with_items:
-    - pip install tweepy
-    - pip install couchdb
-    - pip install nltk
-    - pip install sklearn
-    - pip install shapely
-    - pip install geopandas
-    - pip install scipy
+    - pip3 install tweepy
+    - pip3 install couchdb
+    - pip3 install nltk
+    - pip3 install sklearn
+    - pip3 install shapely
+    - pip3 install geopandas
+    - pip3 install scipy
 
 
 - name: clone git project
@@ -86,17 +86,14 @@
     password: admin
     method: POST
     body: '{
-             "type": "json",
-             "def": {
-              "fields": [
-               {
-                "pos_rate": "asc"
-               }
-              ],
-              "partial_filter_selector": {}
-           }'
+              "index": {
+                  "fields": ["foo"]
+              },
+              "name" : "foo-index",
+              "type" : "json"
+            }'
     force_basic_auth: yes
-    status_code: 400,201
+    status_code: 200
     body_format: json
     headers:
       Content-Type: "application/json"
@@ -110,168 +107,14 @@
     password: admin
     method: POST
     body: '{
-             "type": "json",
-             "def": {
-              "fields": [
-               {
-                "non_school_qualifications_total": "asc"
-               }
-              ],
-              "partial_filter_selector": {}
-             }
+              "index": {
+                  "fields": ["foo"]
+              },
+              "name" : "foo-index",
+              "type" : "json"
             }'
     force_basic_auth: yes
-    status_code: 400,201
-    body_format: json
-    headers:
-      Content-Type: "application/json"
-    when: inventory_hostname == groups.web_server[0]
-  ignore_errors: yes
-
-  - name: Create Index
-  uri:
-    url: http://localhost:5984/geo_db/_index
-    user: admin
-    password: admin
-    method: POST
-    body: '{
-             "type": "json",
-             "def": {
-              "fields": [
-               {
-                "moving_house": "asc"
-               }
-              ],
-              "partial_filter_selector": {}
-             }
-            }'
-    force_basic_auth: yes
-    status_code: 400,201
-    body_format: json
-    headers:
-      Content-Type: "application/json"
-    when: inventory_hostname == groups.web_server[0]
-  ignore_errors: yes
-
-  - name: Create Index
-  uri:
-    url: http://localhost:5984/geo_db/_index
-    user: admin
-    password: admin
-    method: POST
-    body: '{
-             "type": "json",
-             "def": {
-              "fields": [
-               {
-                "unemployed": "asc"
-               }
-              ],
-              "partial_filter_selector": {}
-             }
-            }'
-    force_basic_auth: yes
-    status_code: 400,201
-    body_format: json
-    headers:
-      Content-Type: "application/json"
-    when: inventory_hostname == groups.web_server[0]
-  ignore_errors: yes
-
-  - name: Create Index
-  uri:
-    url: http://localhost:5984/geo_db/_index
-    user: admin
-    password: admin
-    method: POST
-    body: '{
-             "type": "json",
-             "def": {
-              "fields": [
-               {
-                "person_did_not_go_to_school_total": "asc"
-               }
-              ],
-              "partial_filter_selector": {}
-             }
-            }'
-    force_basic_auth: yes
-    status_code: 400,201
-    body_format: json
-    headers:
-      Content-Type: "application/json"
-    when: inventory_hostname == groups.web_server[0]
-  ignore_errors: yes
-
-  - name: Create Index
-  uri:
-    url: http://localhost:5984/geo_db/_index
-    user: admin
-    password: admin
-    method: POST
-    body: '{
-             "type": "json",
-             "def": {
-              "fields": [
-               {
-                "income_over_4000": "asc"
-               }
-              ],
-              "partial_filter_selector": {}
-             }
-            }'
-    force_basic_auth: yes
-    status_code: 400,201
-    body_format: json
-    headers:
-      Content-Type: "application/json"
-    when: inventory_hostname == groups.web_server[0]
-  ignore_errors: yes
-
-  - name: Create Index
-  uri:
-    url: http://localhost:5984/geo_db/_index
-    user: admin
-    password: admin
-    method: POST
-    body: '{
-             "type": "json",
-             "def": {
-              "fields": [
-               {
-                "person_participate_educational_institution": "asc"
-               }
-              ],
-              "partial_filter_selector": {}
-             }
-            }'
-    force_basic_auth: yes
-    status_code: 400,201
-    body_format: json
-    headers:
-      Content-Type: "application/json"
-    when: inventory_hostname == groups.web_server[0]
-  ignore_errors: yes
-
-  - name: Create Index
-  uri:
-    url: http://localhost:5984/geo_db/_index
-    user: admin
-    password: admin
-    method: POST
-    body: '{
-             "type": "json",
-             "def": {
-              "fields": [
-               {
-                "voluntary_work_total": "asc"
-               }
-              ],
-              "partial_filter_selector": {}
-             }
-            }'
-    force_basic_auth: yes
-    status_code: 400,201
+    status_code: 200
     body_format: json
     headers:
       Content-Type: "application/json"
@@ -285,18 +128,140 @@
     password: admin
     method: POST
     body: '{
-             "type": "json",
-             "def": {
-              "fields": [
-               {
-                "person_medical_help": "asc"
-               }
-              ],
-              "partial_filter_selector": {}
-             }
+              "index": {
+                  "fields": ["foo"]
+              },
+              "name" : "foo-index",
+              "type" : "json"
             }'
     force_basic_auth: yes
-    status_code: 400,201
+    status_code: 200
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+    when: inventory_hostname == groups.web_server[0]
+  ignore_errors: yes
+
+- name: Create Index
+  uri:
+    url: http://localhost:5984/geo_db/_index
+    user: admin
+    password: admin
+    method: POST
+    body: '{
+              "index": {
+                  "fields": ["foo"]
+              },
+              "name" : "foo-index",
+              "type" : "json"
+            }'
+    force_basic_auth: yes
+    status_code: 200
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+    when: inventory_hostname == groups.web_server[0]
+  ignore_errors: yes
+
+- name: Create Index
+  uri:
+    url: http://localhost:5984/geo_db/_index
+    user: admin
+    password: admin
+    method: POST
+    body: '{
+              "index": {
+                  "fields": ["foo"]
+              },
+              "name" : "foo-index",
+              "type" : "json"
+            }'
+    force_basic_auth: yes
+    status_code: 200
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+    when: inventory_hostname == groups.web_server[0]
+  ignore_errors: yes
+
+- name: Create Index
+  uri:
+    url: http://localhost:5984/geo_db/_index
+    user: admin
+    password: admin
+    method: POST
+    body: '{
+              "index": {
+                  "fields": ["foo"]
+              },
+              "name" : "foo-index",
+              "type" : "json"
+            }'
+    force_basic_auth: yes
+    status_code: 200
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+    when: inventory_hostname == groups.web_server[0]
+  ignore_errors: yes
+
+- name: Create Index
+  uri:
+    url: http://localhost:5984/geo_db/_index
+    user: admin
+    password: admin
+    method: POST
+    body: '{
+              "index": {
+                  "fields": ["foo"]
+              },
+              "name" : "foo-index",
+              "type" : "json"
+            }'
+    force_basic_auth: yes
+    status_code: 200
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+    when: inventory_hostname == groups.web_server[0]
+  ignore_errors: yes
+
+- name: Create Index
+  uri:
+    url: http://localhost:5984/geo_db/_index
+    user: admin
+    password: admin
+    method: POST
+    body: '{
+              "index": {
+                  "fields": ["foo"]
+              },
+              "name" : "foo-index",
+              "type" : "json"
+            }'
+    force_basic_auth: yes
+    status_code: 200
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+    when: inventory_hostname == groups.web_server[0]
+  ignore_errors: yes
+
+- name: Create Index
+  uri:
+    url: http://localhost:5984/geo_db/_index
+    user: admin
+    password: admin
+    method: POST
+    body: '{
+              "index": {
+                  "fields": ["foo"]
+              },
+              "name" : "foo-index",
+              "type" : "json"
+            }'
+    force_basic_auth: yes
+    status_code: 200
     body_format: json
     headers:
       Content-Type: "application/json"
@@ -324,11 +289,7 @@
   copy: src=apache2.conf dest=/etc/apache2/apache2.conf
 
 - name: Copy html to apache
-  copy:
-    src: /home/ubuntu/COMP90024_Team26/html/comp90024
-    dest: /var/www/html
-    remote_src: yes
-    directory_mode: yes
+  command: "sudo cp -r /home/ubuntu/COMP90024_Team26/html/comp90024 /var/www/html/comp90024"
 
 - name: Enable apache rewrite
   command: "sudo a2enmod rewrite"
