@@ -66,14 +66,14 @@
 #     chdir: /home/ubuntu/COMP90024_Team26/Python_code/Final/Web_Server_Final/
 
 - name: Run sum_sa2_sentiment.py
-  shell: "python3 sum_sa2_sentiment.py"
+  shell: "nohup python3 sum_sa2_sentiment.py </dev/null >/dev/null 2>&1 &"
   args:
     chdir: /home/ubuntu/COMP90024_Team26/Python_code/Final/Web_Server_Final/
   async: 10
   poll: 0
 
 - name: Run couchdb_to_geojson.py
-  shell: "python3 couchdb_to_geojson.py"
+  shell: "nohup sudo python3 couchdb_to_geojson.py </dev/null >/dev/null 2>&1 &"
   args:
     chdir: /home/ubuntu/COMP90024_Team26/Python_code/Final/Web_Server_Final/
   async: 10
