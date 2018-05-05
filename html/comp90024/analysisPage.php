@@ -22,12 +22,12 @@
           ['_id' => ['$gt' => null]]
       ]
   ];
-  $unemployed_docs = $client->limit(5)->sort([["unemployed" => "desc"]])->fields(['name_16', 'unemployed', 'pos_rate'])->find($selector);
-  $income_over_4000_docs = $client->limit(5)->sort([["income_over_4000" => "desc"]])->fields(['name_16', 'income_over_4000', 'pos_rate'])->find($selector);
-  $person_did_not_go_to_school_total_docs = $client->limit(5)->sort([["person_did_not_go_to_school_total" => "desc"]])->fields(['name_16', 'person_did_not_go_to_school_total', 'pos_rate'])->find($selector);
-  $person_medical_help_docs = $client->limit(5)->sort([["person_medical_help" => "desc"]])->fields(['name_16', 'person_medical_help', 'pos_rate'])->find($selector);
-  $voluntary_work_total_docs = $client->limit(5)->sort([["voluntary_work_total" => "desc"]])->fields(['name_16', 'voluntary_work_total', 'pos_rate'])->find($selector);
-  $moving_house_docs = $client->limit(5)->sort([["moving_house" => "desc"]])->fields(['name_16', 'moving_house', 'pos_rate'])->find($selector);
+  $unemployed_docs = $client->limit(5)->sort([["unemployed_Percent" => "desc"]])->fields(['name_16', 'unemployed_Percent', 'pos_rate'])->find($selector);
+  $income_over_4000_docs = $client->limit(5)->sort([["weekly_income_4000_more_proportion" => "desc"]])->fields(['name_16', 'weekly_income_4000_more_proportion', 'pos_rate'])->find($selector);
+  $person_did_not_go_to_school_total_docs = $client->limit(5)->sort([["did_not_go_to_schllo_Percent" => "desc"]])->fields(['name_16', 'did_not_go_to_schllo_Percent', 'pos_rate'])->find($selector);
+  $person_medical_help_docs = $client->limit(5)->sort([["health_care_and_social_assistance" => "desc"]])->fields(['name_16', 'health_care_and_social_assistance', 'pos_rate'])->find($selector);
+  $voluntary_work_total_docs = $client->limit(5)->sort([["volunteer_proportion" => "desc"]])->fields(['name_16', 'volunteer_proportion', 'pos_rate'])->find($selector);
+  $moving_house_docs = $client->limit(5)->sort([["place_of_usual_residence_1_year_proportion" => "desc"]])->fields(['name_16', 'place_of_usual_residence_1_year_proportion', 'pos_rate'])->find($selector);
 
  ?>
 <div class="container" id="content-container">
@@ -65,11 +65,11 @@
         yAxisID: 'y-axis-1',
         borderWidth: 1,
         data: [
-          <?php echo $unemployed_docs[0]->unemployed.','.
-                      $unemployed_docs[1]->unemployed.','.
-                      $unemployed_docs[2]->unemployed.','.
-                      $unemployed_docs[3]->unemployed.','.
-                      $unemployed_docs[4]->unemployed ?>
+          <?php echo $unemployed_docs[0]->unemployed_Percent.','.
+                      $unemployed_docs[1]->unemployed_Percent.','.
+                      $unemployed_docs[2]->unemployed_Percent.','.
+                      $unemployed_docs[3]->unemployed_Percent.','.
+                      $unemployed_docs[4]->unemployed_Percent ?>
         ]
       }, {
         label: 'tweets sentiment',
@@ -160,11 +160,11 @@
         yAxisID: 'y-axis-1',
         borderWidth: 1,
         data: [
-          <?php echo $person_did_not_go_to_school_total_docs[0]->person_did_not_go_to_school_total.','.
-                      $person_did_not_go_to_school_total_docs[1]->person_did_not_go_to_school_total.','.
-                      $person_did_not_go_to_school_total_docs[2]->person_did_not_go_to_school_total.','.
-                      $person_did_not_go_to_school_total_docs[3]->person_did_not_go_to_school_total.','.
-                      $person_did_not_go_to_school_total_docs[4]->person_did_not_go_to_school_total ?>
+          <?php echo $person_did_not_go_to_school_total_docs[0]->did_not_go_to_schllo_Percent.','.
+                      $person_did_not_go_to_school_total_docs[1]->did_not_go_to_schllo_Percent.','.
+                      $person_did_not_go_to_school_total_docs[2]->did_not_go_to_schllo_Percent.','.
+                      $person_did_not_go_to_school_total_docs[3]->did_not_go_to_schllo_Percent.','.
+                      $person_did_not_go_to_school_total_docs[4]->did_not_go_to_schllo_Percent ?>
         ]
       }, {
         label: 'tweets sentiment',
@@ -255,11 +255,11 @@
         yAxisID: 'y-axis-1',
         borderWidth: 1,
         data: [
-          <?php echo $person_medical_help_docs[0]->person_medical_help.','.
-                      $person_medical_help_docs[1]->person_medical_help.','.
-                      $person_medical_help_docs[2]->person_medical_help.','.
-                      $person_medical_help_docs[3]->person_medical_help.','.
-                      $person_medical_help_docs[4]->person_medical_help ?>
+          <?php echo $person_medical_help_docs[0]->health_care_and_social_assistance.','.
+                      $person_medical_help_docs[1]->health_care_and_social_assistance.','.
+                      $person_medical_help_docs[2]->health_care_and_social_assistance.','.
+                      $person_medical_help_docs[3]->health_care_and_social_assistance.','.
+                      $person_medical_help_docs[4]->health_care_and_social_assistance ?>
         ]
       }, {
         label: 'tweets sentiment',
@@ -350,11 +350,11 @@
         yAxisID: 'y-axis-1',
         borderWidth: 1,
         data: [
-          <?php echo $income_over_4000_docs[0]->income_over_4000.','.
-                      $income_over_4000_docs[1]->income_over_4000.','.
-                      $income_over_4000_docs[2]->income_over_4000.','.
-                      $income_over_4000_docs[3]->income_over_4000.','.
-                      $income_over_4000_docs[4]->income_over_4000 ?>
+          <?php echo $income_over_4000_docs[0]->weekly_income_4000_more_proportion.','.
+                      $income_over_4000_docs[1]->weekly_income_4000_more_proportion.','.
+                      $income_over_4000_docs[2]->weekly_income_4000_more_proportion.','.
+                      $income_over_4000_docs[3]->weekly_income_4000_more_proportion.','.
+                      $income_over_4000_docs[4]->weekly_income_4000_more_proportion ?>
         ]
       }, {
         label: 'tweets sentiment',
@@ -446,11 +446,11 @@
         yAxisID: 'y-axis-1',
         borderWidth: 1,
         data: [
-          <?php echo $voluntary_work_total_docs[0]->voluntary_work_total.','.
-                      $voluntary_work_total_docs[1]->voluntary_work_total.','.
-                      $voluntary_work_total_docs[2]->voluntary_work_total.','.
-                      $voluntary_work_total_docs[3]->voluntary_work_total.','.
-                      $voluntary_work_total_docs[4]->voluntary_work_total ?>
+          <?php echo $voluntary_work_total_docs[0]->volunteer_proportion.','.
+                      $voluntary_work_total_docs[1]->volunteer_proportion.','.
+                      $voluntary_work_total_docs[2]->volunteer_proportion.','.
+                      $voluntary_work_total_docs[3]->volunteer_proportion.','.
+                      $voluntary_work_total_docs[4]->volunteer_proportion ?>
         ]
       }, {
         label: 'tweets sentiment',
@@ -543,11 +543,11 @@
         yAxisID: 'y-axis-1',
         borderWidth: 1,
         data: [
-          <?php echo $moving_house_docs[0]->moving_house.','.
-                      $moving_house_docs[1]->moving_house.','.
-                      $moving_house_docs[2]->moving_house.','.
-                      $moving_house_docs[3]->moving_house.','.
-                      $moving_house_docs[4]->moving_house ?>
+          <?php echo $moving_house_docs[0]->place_of_usual_residence_1_year_proportion.','.
+                      $moving_house_docs[1]->place_of_usual_residence_1_year_proportion.','.
+                      $moving_house_docs[2]->place_of_usual_residence_1_year_proportion.','.
+                      $moving_house_docs[3]->place_of_usual_residence_1_year_proportion.','.
+                      $moving_house_docs[4]->place_of_usual_residence_1_year_proportion ?>
         ]
       }, {
         label: 'tweets sentiment',
@@ -598,140 +598,4 @@
         }
     });
   </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <!-- <script>
-    var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    var color = Chart.helpers.color;
-    var horizontalBarChartData = {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-      datasets: [{
-        label: 'Dataset 1',
-        backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
-        borderColor: window.chartColors.red,
-        borderWidth: 1,
-        data: [
-          randomScalingFactor(),
-          randomScalingFactor(),
-          randomScalingFactor(),
-          randomScalingFactor(),
-          randomScalingFactor(),
-          randomScalingFactor(),
-          randomScalingFactor()
-        ]
-      }, {
-        label: 'Dataset 2',
-        backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
-        borderColor: window.chartColors.blue,
-        data: [
-          randomScalingFactor(),
-          randomScalingFactor(),
-          randomScalingFactor(),
-          randomScalingFactor(),
-          randomScalingFactor(),
-          randomScalingFactor(),
-          randomScalingFactor()
-        ]
-      }]
-
-    };
-
-    window.onload = function() {
-      var ctx = document.getElementById('canvas').getContext('2d');
-      window.myHorizontalBar = new Chart(ctx, {
-        type: 'horizontalBar',
-        data: horizontalBarChartData,
-        options: {
-          // Elements options apply to all of the options unless overridden in a dataset
-          // In this case, we are setting the border of each horizontal bar to be 2px wide
-          elements: {
-            rectangle: {
-              borderWidth: 2,
-            }
-          },
-          responsive: true,
-          legend: {
-            position: 'right',
-          },
-          title: {
-            display: true,
-            text: 'Chart.js Horizontal Bar Chart'
-          }
-        }
-      });
-
-    };
-
-    document.getElementById('randomizeData').addEventListener('click', function() {
-      var zero = Math.random() < 0.2 ? true : false;
-      horizontalBarChartData.datasets.forEach(function(dataset) {
-        dataset.data = dataset.data.map(function() {
-          return zero ? 0.0 : randomScalingFactor();
-        });
-
-      });
-      window.myHorizontalBar.update();
-    });
-
-    var colorNames = Object.keys(window.chartColors);
-
-    document.getElementById('addDataset').addEventListener('click', function() {
-      var colorName = colorNames[horizontalBarChartData.datasets.length % colorNames.length];
-      var dsColor = window.chartColors[colorName];
-      var newDataset = {
-        label: 'Dataset ' + horizontalBarChartData.datasets.length,
-        backgroundColor: color(dsColor).alpha(0.5).rgbString(),
-        borderColor: dsColor,
-        data: []
-      };
-
-      for (var index = 0; index < horizontalBarChartData.labels.length; ++index) {
-        newDataset.data.push(randomScalingFactor());
-      }
-
-      horizontalBarChartData.datasets.push(newDataset);
-      window.myHorizontalBar.update();
-    });
-
-    document.getElementById('addData').addEventListener('click', function() {
-      if (horizontalBarChartData.datasets.length > 0) {
-        var month = MONTHS[horizontalBarChartData.labels.length % MONTHS.length];
-        horizontalBarChartData.labels.push(month);
-
-        for (var index = 0; index < horizontalBarChartData.datasets.length; ++index) {
-          horizontalBarChartData.datasets[index].data.push(randomScalingFactor());
-        }
-
-        window.myHorizontalBar.update();
-      }
-    });
-
-    document.getElementById('removeDataset').addEventListener('click', function() {
-      horizontalBarChartData.datasets.splice(0, 1);
-      window.myHorizontalBar.update();
-    });
-
-    document.getElementById('removeData').addEventListener('click', function() {
-      horizontalBarChartData.labels.splice(-1, 1); // remove the label first
-
-      horizontalBarChartData.datasets.forEach(function(dataset) {
-        dataset.data.pop();
-      });
-
-      window.myHorizontalBar.update();
-    });
-  </script> -->
 </div>

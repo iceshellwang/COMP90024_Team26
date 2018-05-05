@@ -1,299 +1,291 @@
 ---
-- name: Install pip
-  apt:
-    name: python3-pip
+# - name: Install pip
+#   apt:
+#     name: python3-pip
 
-- name: Install git
-  apt:
-    name: git
+# - name: Install git
+#   apt:
+#     name: git
 
-- name: Locales
-  command: "{{ item }}"
-  with_items:
-    - dpkg-reconfigure locales -f noninteractive
+# - name: Locales
+#   command: "{{ item }}"
+#   with_items:
+#     - dpkg-reconfigure locales -f noninteractive
 
-- name: Replicate database
-  uri:
-    url: http://localhost:5984/_replicate
-    user: admin
-    password: admin
-    method: POST
-    body: '{"_id": "my_rep", "source": "http://admin:admin@{{ groups.preprocess[0] }}:5984/preprocess_twitter", "target": "http://admin:admin@localhost:5984/preprocess_twitter", "create_target": true, "continuous": true}'
-    force_basic_auth: yes
-    status_code: 202
-    body_format: json
-    headers:
-      Content-Type: "application/json"
-    when: inventory_hostname == groups.web_server[0]
-  ignore_errors: yes
+# - name: Replicate database
+#   uri:
+#     url: http://localhost:5984/_replicate
+#     user: admin
+#     password: admin
+#     method: POST
+#     body: '{"_id": "my_rep", "source": "http://admin:admin@{{ groups.preprocess[0] }}:5984/preprocess_twitter", "target": "http://admin:admin@localhost:5984/preprocess_twitter", "create_target": true, "continuous": true}'
+#     force_basic_auth: yes
+#     status_code: 202
+#     body_format: json
+#     headers:
+#       Content-Type: "application/json"
+#     when: inventory_hostname == groups.web_server[0]
+#   ignore_errors: yes
 
-- name: Create View
-  uri:
-    url: http://localhost:5984/preprocess_twitter/_design/sentiment
-    user: admin
-    password: admin
-    method: PUT
-    body: '{"views": {"sa2_sentiment": {"map": "function (doc) {emit([doc.SA2_MAIN16, doc.SENTIMENT], 1);}", "reduce": "_sum"}}}'
-    force_basic_auth: yes
-    status_code: 400,201
-    body_format: json
-    headers:
-      Content-Type: "application/json"
-    when: inventory_hostname == groups.web_server[0]
-  ignore_errors: yes
+# - name: Create View
+#   uri:
+#     url: http://localhost:5984/preprocess_twitter/_design/sentiment
+#     user: admin
+#     password: admin
+#     method: PUT
+#     body: '{"views": {"sa2_sentiment": {"map": "function (doc) {emit([doc.SA2_MAIN16, doc.SENTIMENT], 1);}", "reduce": "_sum"}}}'
+#     force_basic_auth: yes
+#     status_code: 400,201
+#     body_format: json
+#     headers:
+#       Content-Type: "application/json"
+#     when: inventory_hostname == groups.web_server[0]
+#   ignore_errors: yes
 
-- name: Pip install packages
-  command: "{{ item }}"
-  with_items:
-    - pip3 install tweepy
-    - pip3 install couchdb
-    - pip3 install nltk
-    - pip3 install sklearn
-    - pip3 install shapely
-    - pip3 install geopandas
-    - pip3 install scipy
-
-
-- name: clone git project
-  git:
-    repo: "https://github.com/zjw93615/COMP90024_Team26.git"
-    dest: /home/ubuntu/COMP90024_Team26
+# - name: Pip install packages
+#   command: "{{ item }}"
+#   with_items:
+#     - pip3 install tweepy
+#     - pip3 install couchdb
+#     - pip3 install nltk
+#     - pip3 install sklearn
+#     - pip3 install shapely
+#     - pip3 install geopandas
+#     - pip3 install scipy
 
 
-- name: Run load_geojson.py
-  shell: "python3 load_geojson.py"
-  args:
-    chdir: /home/ubuntu/COMP90024_Team26/Python_code/Final/Web_Server_Final/
+# - name: clone git project
+#   git:
+#     repo: "https://github.com/zjw93615/COMP90024_Team26.git"
+#     dest: /home/ubuntu/COMP90024_Team26
+
+
+# - name: Run load_geojson.py
+#   shell: "python3 load_geojson.py"
+#   args:
+#     chdir: /home/ubuntu/COMP90024_Team26/Python_code/Final/Web_Server_Final/
 
 - name: Run sum_sa2_sentiment.py
   shell: "python3 sum_sa2_sentiment.py"
   args:
     chdir: /home/ubuntu/COMP90024_Team26/Python_code/Final/Web_Server_Final/
-  async: 5
+  async: 10
   poll: 0
 
 - name: Run couchdb_to_geojson.py
   shell: "python3 couchdb_to_geojson.py"
   args:
     chdir: /home/ubuntu/COMP90024_Team26/Python_code/Final/Web_Server_Final/
-  async: 5
+  async: 10
   poll: 0
 
-- name: Create Index
-  uri:
-    url: http://localhost:5984/geo_db/_index
-    user: admin
-    password: admin
-    method: POST
-    body: '{
-              "index": {
-                  "fields": ["foo"]
-              },
-              "name" : "foo-index",
-              "type" : "json"
-            }'
-    force_basic_auth: yes
-    status_code: 200
-    body_format: json
-    headers:
-      Content-Type: "application/json"
-    when: inventory_hostname == groups.web_server[0]
-  ignore_errors: yes
+# - name: Create Index
+#   uri:
+#     url: http://localhost:5984/geo_db/_index
+#     user: admin
+#     password: admin
+#     method: POST
+#     body: '{
+#               "index": {
+#                   "fields": ["foo"]
+#               },
+#               "name" : "foo-index",
+#               "type" : "json"
+#             }'
+#     force_basic_auth: yes
+#     status_code: 200
+#     body_format: json
+#     headers:
+#       Content-Type: "application/json"
+#     when: inventory_hostname == groups.web_server[0]
+#   ignore_errors: yes
 
-- name: Create Index
-  uri:
-    url: http://localhost:5984/geo_db/_index
-    user: admin
-    password: admin
-    method: POST
-    body: '{
-              "index": {
-                  "fields": ["foo"]
-              },
-              "name" : "foo-index",
-              "type" : "json"
-            }'
-    force_basic_auth: yes
-    status_code: 200
-    body_format: json
-    headers:
-      Content-Type: "application/json"
-    when: inventory_hostname == groups.web_server[0]
-  ignore_errors: yes
+# - name: Create Index
+#   uri:
+#     url: http://localhost:5984/geo_db/_index
+#     user: admin
+#     password: admin
+#     method: POST
+#     body: '{
+#              "index": {
+#                 "fields": [
+#                    "health_care_and_social_assistance"
+#                 ]
+#              },
+#              "name": "health_care_and_social_assistance-index",
+#              "type": "json"
+#           }'
+#     force_basic_auth: yes
+#     status_code: 200
+#     body_format: json
+#     headers:
+#       Content-Type: "application/json"
+#     when: inventory_hostname == groups.web_server[0]
+#   ignore_errors: yes
 
-- name: Create Index
-  uri:
-    url: http://localhost:5984/geo_db/_index
-    user: admin
-    password: admin
-    method: POST
-    body: '{
-              "index": {
-                  "fields": ["foo"]
-              },
-              "name" : "foo-index",
-              "type" : "json"
-            }'
-    force_basic_auth: yes
-    status_code: 200
-    body_format: json
-    headers:
-      Content-Type: "application/json"
-    when: inventory_hostname == groups.web_server[0]
-  ignore_errors: yes
+# - name: Create Index
+#   uri:
+#     url: http://localhost:5984/geo_db/_index
+#     user: admin
+#     password: admin
+#     method: POST
+#     body: '{
+#                "index": {
+#                   "fields": [
+#                      "did_not_go_to_schllo_Percent"
+#                   ]
+#                },
+#                "name": "did_not_go_to_schllo_Percent-index",
+#                "type": "json"
+#             }'
+#     force_basic_auth: yes
+#     status_code: 200
+#     body_format: json
+#     headers:
+#       Content-Type: "application/json"
+#     when: inventory_hostname == groups.web_server[0]
+#   ignore_errors: yes
 
-- name: Create Index
-  uri:
-    url: http://localhost:5984/geo_db/_index
-    user: admin
-    password: admin
-    method: POST
-    body: '{
-              "index": {
-                  "fields": ["foo"]
-              },
-              "name" : "foo-index",
-              "type" : "json"
-            }'
-    force_basic_auth: yes
-    status_code: 200
-    body_format: json
-    headers:
-      Content-Type: "application/json"
-    when: inventory_hostname == groups.web_server[0]
-  ignore_errors: yes
+# - name: Create Index
+#   uri:
+#     url: http://localhost:5984/geo_db/_index
+#     user: admin
+#     password: admin
+#     method: POST
+#     body: '{
+#                "index": {
+#                   "fields": [
+#                      "place_of_usual_residence_1_year_proportion"
+#                   ]
+#                },
+#                "name": "place_of_usual_residence_1_year_proportion-index",
+#                "type": "json"
+#             }'
+#     force_basic_auth: yes
+#     status_code: 200
+#     body_format: json
+#     headers:
+#       Content-Type: "application/json"
+#     when: inventory_hostname == groups.web_server[0]
+#   ignore_errors: yes
 
-- name: Create Index
-  uri:
-    url: http://localhost:5984/geo_db/_index
-    user: admin
-    password: admin
-    method: POST
-    body: '{
-              "index": {
-                  "fields": ["foo"]
-              },
-              "name" : "foo-index",
-              "type" : "json"
-            }'
-    force_basic_auth: yes
-    status_code: 200
-    body_format: json
-    headers:
-      Content-Type: "application/json"
-    when: inventory_hostname == groups.web_server[0]
-  ignore_errors: yes
+# - name: Create Index
+#   uri:
+#     url: http://localhost:5984/geo_db/_index
+#     user: admin
+#     password: admin
+#     method: POST
+#     body: '{
+#                "index": {
+#                   "fields": [
+#                      "bicycle_to_work"
+#                   ]
+#                },
+#                "name": "bicycle_to_work-index",
+#                "type": "json"
+#             }'
+#     force_basic_auth: yes
+#     status_code: 200
+#     body_format: json
+#     headers:
+#       Content-Type: "application/json"
+#     when: inventory_hostname == groups.web_server[0]
+#   ignore_errors: yes
 
-- name: Create Index
-  uri:
-    url: http://localhost:5984/geo_db/_index
-    user: admin
-    password: admin
-    method: POST
-    body: '{
-              "index": {
-                  "fields": ["foo"]
-              },
-              "name" : "foo-index",
-              "type" : "json"
-            }'
-    force_basic_auth: yes
-    status_code: 200
-    body_format: json
-    headers:
-      Content-Type: "application/json"
-    when: inventory_hostname == groups.web_server[0]
-  ignore_errors: yes
+# - name: Create Index
+#   uri:
+#     url: http://localhost:5984/geo_db/_index
+#     user: admin
+#     password: admin
+#     method: POST
+#     body: '{
+#                "index": {
+#                   "fields": [
+#                      "weekly_income_4000_more_proportion"
+#                   ]
+#                },
+#                "name": "weekly_income_4000_more_proportion-index",
+#                "type": "json"
+#             }'
+#     force_basic_auth: yes
+#     status_code: 200
+#     body_format: json
+#     headers:
+#       Content-Type: "application/json"
+#     when: inventory_hostname == groups.web_server[0]
+#   ignore_errors: yes
 
-- name: Create Index
-  uri:
-    url: http://localhost:5984/geo_db/_index
-    user: admin
-    password: admin
-    method: POST
-    body: '{
-              "index": {
-                  "fields": ["foo"]
-              },
-              "name" : "foo-index",
-              "type" : "json"
-            }'
-    force_basic_auth: yes
-    status_code: 200
-    body_format: json
-    headers:
-      Content-Type: "application/json"
-    when: inventory_hostname == groups.web_server[0]
-  ignore_errors: yes
+# - name: Create Index
+#   uri:
+#     url: http://localhost:5984/geo_db/_index
+#     user: admin
+#     password: admin
+#     method: POST
+#     body: '{
+#                "index": {
+#                   "fields": [
+#                      "unemployed_Percent"
+#                   ]
+#                },
+#                "name": "unemployed_Percent-index",
+#                "type": "json"
+#             }'
+#     force_basic_auth: yes
+#     status_code: 200
+#     body_format: json
+#     headers:
+#       Content-Type: "application/json"
+#     when: inventory_hostname == groups.web_server[0]
+#   ignore_errors: yes
 
-- name: Create Index
-  uri:
-    url: http://localhost:5984/geo_db/_index
-    user: admin
-    password: admin
-    method: POST
-    body: '{
-              "index": {
-                  "fields": ["foo"]
-              },
-              "name" : "foo-index",
-              "type" : "json"
-            }'
-    force_basic_auth: yes
-    status_code: 200
-    body_format: json
-    headers:
-      Content-Type: "application/json"
-    when: inventory_hostname == groups.web_server[0]
-  ignore_errors: yes
+# - name: Create Index
+#   uri:
+#     url: http://localhost:5984/geo_db/_index
+#     user: admin
+#     password: admin
+#     method: POST
+#     body: '{
+#                "index": {
+#                   "fields": [
+#                      "volunteer_proportion"
+#                   ]
+#                },
+#                "name": "volunteer_proportion-index",
+#                "type": "json"
+#             }'
+#     force_basic_auth: yes
+#     status_code: 200
+#     body_format: json
+#     headers:
+#       Content-Type: "application/json"
+#     when: inventory_hostname == groups.web_server[0]
+#   ignore_errors: yes
 
-- name: Create Index
-  uri:
-    url: http://localhost:5984/geo_db/_index
-    user: admin
-    password: admin
-    method: POST
-    body: '{
-              "index": {
-                  "fields": ["foo"]
-              },
-              "name" : "foo-index",
-              "type" : "json"
-            }'
-    force_basic_auth: yes
-    status_code: 200
-    body_format: json
-    headers:
-      Content-Type: "application/json"
-    when: inventory_hostname == groups.web_server[0]
-  ignore_errors: yes
+# - name: Install apache2
+#   apt:
+#     name: apache2
 
+# - name: Install php
+#   apt:
+#     name: php
 
-- name: Install apache2
-  apt:
-    name: apache2
+# - name: Install libapache2-mod-php
+#   apt:
+#     name: libapache2-mod-php
 
-- name: Install php
-  apt:
-    name: php
+# - name: Install php7.0-xml
+#   apt:
+#     name: php7.0-xml
 
-- name: Install libapache2-mod-php
-  apt:
-    name: libapache2-mod-php
+# - name: Apply the cluster configuration
+#   copy: src=apache2.conf dest=/etc/apache2/apache2.conf
 
-- name: Install php7.0-xml
-  apt:
-    name: php7.0-xml
+# - name: Copy html to apache
+#   command: "sudo cp -r /home/ubuntu/COMP90024_Team26/html/comp90024 /var/www/html/comp90024"
 
-- name: Apply the cluster configuration
-  copy: src=apache2.conf dest=/etc/apache2/apache2.conf
+# - name: Enable apache rewrite
+#   command: "sudo a2enmod rewrite"
 
-- name: Copy html to apache
-  command: "sudo cp -r /home/ubuntu/COMP90024_Team26/html/comp90024 /var/www/html/comp90024"
-
-- name: Enable apache rewrite
-  command: "sudo a2enmod rewrite"
-
-- name: Restart apache
-  command: "sudo systemctl restart apache2"
+# - name: Restart apache
+#   command: "sudo systemctl restart apache2"
 

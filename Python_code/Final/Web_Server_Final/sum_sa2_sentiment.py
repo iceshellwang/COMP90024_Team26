@@ -29,8 +29,23 @@ def tweets_geo_sentiment_count(db, geodb):
       doc = geodb[sa2_main]
       doc[sentiment] = item.value
       geodb[sa2_main] = doc
+      temp = tweet_geo_sentment_dict.get(sa2_main, {})
+      temp[sentiment] = item.value
+      tweet_geo_sentment_dict[sa2_main] = temp
+  return tweet_geo_sentment_dict
+
+def tweets_geo_sentiment_rate(geodb, tweet_geo_sentment_dict):
+  for key, value in tweet_geo_sentment_dict.items():
+    temp = {}
+    doc = geodb[sa2_main]
+    temp['SA2_MAIN16'] = key
+    temp['pos'] = value.get('pos', 0)
+    temp['neg'] = value.get('neg', 0)
+    doc['pos_rate'] = float(temp['pos'])/max((temp['pos']+temp['neg']),1)
+    geodb[sa2_main] = doc
 
 if __name__ == '__main__':
   while True:
-    tweets_geo_sentiment_count(db, geodb)
+    tweet_geo_sentment_dict = tweets_geo_sentiment_count(db, geodb)
+    tweets_geo_sentiment_rate(geodb, tweet_geo_sentment_dict)
     time.sleep(10*60)

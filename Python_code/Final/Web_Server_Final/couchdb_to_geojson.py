@@ -12,7 +12,7 @@ couch = couchdb.Server(COUCHDB_ADDRESS)
 geo_db = couch[GEO_DBNAME]
 
 while True:
-  geojson_file = open('Total_Attributes_In_Percent_Form.geojson', 'r')
+  geojson_file = open('/var/www/html/comp90024/assets/geojson/Total_Attributes_In_Percent_Form.geojson', 'r')
   geojson_data = json.load(geojson_file)
   new_features = []
   for feature in geojson_data['features']:
@@ -31,7 +31,7 @@ while True:
 
   geojson_file.close()
 
-  geojson_file = open('Total_Attributes_In_Percent_Form.geojson', 'w')
+  geojson_file = open('/var/www/html/comp90024/assets/geojson/Total_Attributes_In_Percent_Form.geojson', 'w')
   geojson_file.write(json.dumps(geojson_data))
   geojson_file.close()
 
