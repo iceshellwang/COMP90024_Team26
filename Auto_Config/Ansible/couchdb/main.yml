@@ -9,17 +9,17 @@
 #     - couchdb
 #     - crawler
 
-- hosts: preprocess
-  sudo: yes
-
-  roles:
-    # - mount
-    # - couchdb
-    - preprocess
-
-# - hosts: web_server
+# - hosts: preprocess
 #   sudo: yes
 
 #   roles:
 #     - mount
 #     - couchdb
+#     - preprocess
+
+- hosts: web_server
+  sudo: yes
+
+  roles:
+    - mount
+    - couchdb

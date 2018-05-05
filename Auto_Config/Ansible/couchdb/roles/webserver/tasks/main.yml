@@ -1,0 +1,328 @@
+---
+- name: Install pip
+  apt:
+    name: python-pip
+
+- name: Install git
+  apt:
+    name: git
+
+- name: Locales
+  command: "{{ item }}"
+  with_items:
+    - dpkg-reconfigure locales -f noninteractive
+
+- name: Replicate database
+  uri:
+    url: http://localhost:5984/_replicate
+    user: admin
+    password: admin
+    method: POST
+    body: '{"_id": "my_rep", "source": "http://admin:admin@{{ groups.preprocess[0] }}:5984/preprocess_twitter", "target": "http://admin:admin@localhost:5984/preprocess_twitter", "create_target": true, "continuous": true}'
+    force_basic_auth: yes
+    status_code: 202
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+    when: inventory_hostname == groups.web_server[0]
+  ignore_errors: yes
+
+- name: Create View
+  uri:
+    url: http://localhost:5984/preprocess_twitter/_design/sentiment
+    user: admin
+    password: admin
+    method: PUT
+    body: '{"views": {"sa2_sentiment": {"map": "function (doc) {emit([doc.SA2_MAIN16, doc.SENTIMENT], 1);}", "reduce": "_sum"}}}'
+    force_basic_auth: yes
+    status_code: 400,201
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+    when: inventory_hostname == groups.web_server[0]
+  ignore_errors: yes
+
+- name: Pip install packages
+  command: "{{ item }}"
+  with_items:
+    - pip install tweepy
+    - pip install couchdb
+    - pip install nltk
+    - pip install sklearn
+    - pip install shapely
+    - pip install geopandas
+    - pip install scipy
+
+
+- name: clone git project
+  git:
+    repo: "https://github.com/zjw93615/COMP90024_Team26.git"
+    dest: /home/ubuntu/COMP90024_Team26
+
+
+- name: Run load_geojson.py
+  shell: "python3 load_geojson.py"
+  args:
+    chdir: /home/ubuntu/COMP90024_Team26/Python_code/Final/Web_Server_Final/
+
+- name: Run sum_sa2_sentiment.py
+  shell: "python3 sum_sa2_sentiment.py"
+  args:
+    chdir: /home/ubuntu/COMP90024_Team26/Python_code/Final/Web_Server_Final/
+  async: 5
+  poll: 0
+
+- name: Run couchdb_to_geojson.py
+  shell: "python3 couchdb_to_geojson.py"
+  args:
+    chdir: /home/ubuntu/COMP90024_Team26/Python_code/Final/Web_Server_Final/
+  async: 5
+  poll: 0
+
+- name: Create Index
+  uri:
+    url: http://localhost:5984/geo_db/_index
+    user: admin
+    password: admin
+    method: POST
+    body: '{
+             "type": "json",
+             "def": {
+              "fields": [
+               {
+                "pos_rate": "asc"
+               }
+              ],
+              "partial_filter_selector": {}
+           }'
+    force_basic_auth: yes
+    status_code: 400,201
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+    when: inventory_hostname == groups.web_server[0]
+  ignore_errors: yes
+
+- name: Create Index
+  uri:
+    url: http://localhost:5984/geo_db/_index
+    user: admin
+    password: admin
+    method: POST
+    body: '{
+             "type": "json",
+             "def": {
+              "fields": [
+               {
+                "non_school_qualifications_total": "asc"
+               }
+              ],
+              "partial_filter_selector": {}
+             }
+            }'
+    force_basic_auth: yes
+    status_code: 400,201
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+    when: inventory_hostname == groups.web_server[0]
+  ignore_errors: yes
+
+  - name: Create Index
+  uri:
+    url: http://localhost:5984/geo_db/_index
+    user: admin
+    password: admin
+    method: POST
+    body: '{
+             "type": "json",
+             "def": {
+              "fields": [
+               {
+                "moving_house": "asc"
+               }
+              ],
+              "partial_filter_selector": {}
+             }
+            }'
+    force_basic_auth: yes
+    status_code: 400,201
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+    when: inventory_hostname == groups.web_server[0]
+  ignore_errors: yes
+
+  - name: Create Index
+  uri:
+    url: http://localhost:5984/geo_db/_index
+    user: admin
+    password: admin
+    method: POST
+    body: '{
+             "type": "json",
+             "def": {
+              "fields": [
+               {
+                "unemployed": "asc"
+               }
+              ],
+              "partial_filter_selector": {}
+             }
+            }'
+    force_basic_auth: yes
+    status_code: 400,201
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+    when: inventory_hostname == groups.web_server[0]
+  ignore_errors: yes
+
+  - name: Create Index
+  uri:
+    url: http://localhost:5984/geo_db/_index
+    user: admin
+    password: admin
+    method: POST
+    body: '{
+             "type": "json",
+             "def": {
+              "fields": [
+               {
+                "person_did_not_go_to_school_total": "asc"
+               }
+              ],
+              "partial_filter_selector": {}
+             }
+            }'
+    force_basic_auth: yes
+    status_code: 400,201
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+    when: inventory_hostname == groups.web_server[0]
+  ignore_errors: yes
+
+  - name: Create Index
+  uri:
+    url: http://localhost:5984/geo_db/_index
+    user: admin
+    password: admin
+    method: POST
+    body: '{
+             "type": "json",
+             "def": {
+              "fields": [
+               {
+                "income_over_4000": "asc"
+               }
+              ],
+              "partial_filter_selector": {}
+             }
+            }'
+    force_basic_auth: yes
+    status_code: 400,201
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+    when: inventory_hostname == groups.web_server[0]
+  ignore_errors: yes
+
+  - name: Create Index
+  uri:
+    url: http://localhost:5984/geo_db/_index
+    user: admin
+    password: admin
+    method: POST
+    body: '{
+             "type": "json",
+             "def": {
+              "fields": [
+               {
+                "person_participate_educational_institution": "asc"
+               }
+              ],
+              "partial_filter_selector": {}
+             }
+            }'
+    force_basic_auth: yes
+    status_code: 400,201
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+    when: inventory_hostname == groups.web_server[0]
+  ignore_errors: yes
+
+  - name: Create Index
+  uri:
+    url: http://localhost:5984/geo_db/_index
+    user: admin
+    password: admin
+    method: POST
+    body: '{
+             "type": "json",
+             "def": {
+              "fields": [
+               {
+                "voluntary_work_total": "asc"
+               }
+              ],
+              "partial_filter_selector": {}
+             }
+            }'
+    force_basic_auth: yes
+    status_code: 400,201
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+    when: inventory_hostname == groups.web_server[0]
+  ignore_errors: yes
+
+- name: Create Index
+  uri:
+    url: http://localhost:5984/geo_db/_index
+    user: admin
+    password: admin
+    method: POST
+    body: '{
+             "type": "json",
+             "def": {
+              "fields": [
+               {
+                "person_medical_help": "asc"
+               }
+              ],
+              "partial_filter_selector": {}
+             }
+            }'
+    force_basic_auth: yes
+    status_code: 400,201
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+    when: inventory_hostname == groups.web_server[0]
+  ignore_errors: yes
+
+
+- name: Install apache2
+  apt:
+    name: apache2
+
+- name: Install php
+  apt:
+    name: php
+
+- name: Install libapache2-mod-php
+  apt:
+    name: libapache2-mod-php
+
+- name: Install php7.0-xml
+  apt:
+    name: php7.0-xml
+
+- name: Copy
+  copy:
+    src: /home/ubuntu/COMP90024_Team26/html/comp90024
+    dest: /var/www/html
+    remote_src: yes
+    directory_mode: yes
