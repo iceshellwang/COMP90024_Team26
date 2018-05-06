@@ -6,6 +6,7 @@ import sentiment_mod as sentiment
 import sys
 import nltk
 import time
+from textblob import TextBlob
 
 try:
   nltk.download('punkt')
@@ -45,12 +46,15 @@ def preprocess_twitter(db, rawdb, total_nodes, node_rank, geojson_data):
       del tweet_doc['_id']
       del tweet_doc['_rev']
       tweet_doc = process_sa2_location(tweet_doc, geojson_data)
-      tweet_doc = process_sentiment(tweet_doc)
-      # tweet_doc = process_textblob_sentiment(tweet_doc)
+      # tweet_doc = process_sentiment(tweet_doc)
+      tweet_doc = process_textblob_sentiment(tweet_doc)
       try:
         db[tweet_id] = tweet_doc
       except:
-        pass
+        doc = db[tweet_id]
+        doc = process_sa2_location(doc, geojson_data)
+        doc = process_textblob_sentiment(doc)
+        db[tweet_id] = doc
     temp += total_nodes
 
 def process_sentiment(tweet_doc):

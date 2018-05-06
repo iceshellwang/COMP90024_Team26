@@ -25,9 +25,10 @@ while True:
     properties['weekly_income_4000_more_proportion'] = doc['weekly_income_4000_more_proportion']
     properties['unemployed_Percent'] = doc['unemployed_Percent']
     properties['volunteer_proportion'] = doc['volunteer_proportion']
-    properties['pos'] = doc['pos']
-    properties['neg'] = doc['neg']
-    properties['pos_rate'] = doc['pos_rate']
+    properties['pos'] = doc.get('pos', 0)
+    properties['neu'] = doc.get('neu', 0)
+    properties['neg'] = doc.get('neg', 0)
+    properties['pos_rate'] = doc.get('pos_rate', 0)
 
   geojson_file.close()
 

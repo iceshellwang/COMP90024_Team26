@@ -43,8 +43,9 @@ def tweets_geo_sentiment_rate(geodb, tweet_geo_sentment_dict):
     doc = geodb[key]
     temp['SA2_MAIN16'] = key
     temp['pos'] = value.get('pos', 0)
+    temp['neu'] = value.get('neu', 0)
     temp['neg'] = value.get('neg', 0)
-    doc['pos_rate'] = float(temp['pos'])/max((temp['pos']+temp['neg']),1)
+    doc['pos_rate'] = float(temp['pos'])/max((temp['pos']+temp['neu']+temp['neg']),1)
     try:
       geodb[key] = doc
     except:
