@@ -1,26 +1,26 @@
 ---
 # This playbook deploys a simple standalone Tomcat 7 server.
 
-# - hosts: crawler
-#   sudo: yes
+- hosts: crawler
+  sudo: yes
 
-#   roles:
-#     - mount
-#     - couchdb
-#     - crawler
+  roles:
+    - mount
+    - couchdb
+    - crawler
 
-# - hosts: preprocess
-#   sudo: yes
+- hosts: preprocess
+  sudo: yes
 
-#   roles:
-#     - mount
-#     - couchdb
-#     - preprocess
+  roles:
+    - mount
+    - couchdb
+    - preprocess
 
 - hosts: web_server
   sudo: yes
 
   roles:
-    # - mount
-    # - couchdb
+    - mount
+    - couchdb
     - webserver

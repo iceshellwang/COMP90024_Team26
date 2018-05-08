@@ -52,6 +52,7 @@
     - pip install shapely
     - pip install geopandas
     - pip install scipy
+    - pip install textblob
 
 
 - name: clone git project

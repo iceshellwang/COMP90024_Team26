@@ -12,7 +12,7 @@
     }else if($path['call_parts'][0] == 'home') {
       include("homePage.php");
     }else if($path['call_parts'][0] == 'analysis') {
-      include("analysisPage.php");
+      include("new_analysisPage.php");
     }
   }
 ?>
